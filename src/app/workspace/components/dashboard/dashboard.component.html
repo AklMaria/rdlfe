@@ -1,0 +1,102 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col col-auto">
+      <h2>Ciao {{profile()?.firstName}}</h2>
+    </div>
+  </div>
+  <div style="height: 26vh;" class="row justify-content-between pt-4">
+    <div class="col col-md-3 h-100" style="min-height: 150px;">
+      <div class="glass-card h-100">
+        <h2>Crediti residui</h2>
+        <p class="fs-1 fw-bold">{{ creditsCount }}</p>
+      </div>
+    </div>
+    <!-- <div class="col col-md-4">
+    <div class="glass-card">
+      <h2>Card 2</h2>
+      <p>Prova Card 2</p>
+    </div>
+  </div> -->
+  <div class="col col-md-9" style="min-height: 150px;">
+    <div class="glass-card d-flex flex-column h-100" >
+      <h2>Prossimo Corso</h2>
+      @if (prossimaAula) {
+        <div class="d-flex flex-column mt-2">
+          <div class="d-flex align-items-baseline">
+            <span class="me-2 fs-3 fw-bold">{{ prossimaAula.date | date:'d':'':'it' }}</span>
+            <span>{{ prossimaAula.date | date:'MMMM':'':'it' }}</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <h5 class="mb-2">{{ prossimaAula.name }}</h5>
+            <button class="btn btn-primary btn-sm mt-2 align-self-start" (click)="visualizzaDettagli(prossimaAula)">
+              <i class="fas fa-info-circle me-1"></i>
+              Visualizza Dettagli
+            </button>
+          </div>
+        </div>
+      } @else {
+        <p class="mt-2 text-muted">Non hai corsi in programma.</p>
+      }
+    </div>
+  </div>
+</div>
+<div class="row pt-4">
+  <div  class="col col-12">
+    <div style="min-height: 50vh;" class="glass-card">
+      <app-calendar (daySelected)="onDaySelected($event)"></app-calendar>
+    </div>
+  </div>
+</div>
+<div class="offcanvas offcanvas-end" tabindex="-1" id="dayDetailsOffcanvas">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">
+      {{ formattedSelectedDay }}
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    @if (selectedDayAule.length > 0) {
+      <div>
+        <h6 class="mb-3">
+          {{ isSelectedDayInPast ? 'Corso chiuso:' : 'Corsi in programma:' }}
+        </h6>
+        @for (aula of selectedDayAule; track aula) {
+          <div class="card mb-3">
+            <div class="card-body">
+              <h6 class="card-title">
+                <i class="fas fa-chalkboard-teacher me-2"></i>
+                {{ aula.name }}
+              </h6>
+              <p class="card-text">
+                <strong>🕐 Orario:</strong> {{ aula.time.split(':')[0] }}:{{ aula.time.split(':')[1] }}<br>
+                <strong>📝 Descrizione:</strong> {{ aula.description }}<br>
+                <!-- <strong>📊 Partecipanti:</strong> {{ aula.users.length }}/{{ aula.maxEntries }} -->
+              </p>
+              <div class="d-flex justify-content-between align-items-end">
+                <span class="badge"
+                  [class.bg-success]="aula.isActive"
+                  [class.bg-danger]="!aula.isActive">
+                  {{ aula.isActive ? 'Attivo' : 'Non attivo' }}
+                </span>
+                <button class="btn btn-primary btn-sm"
+                  [disabled]="(now$ | async)! < getUnlockAtMs(aula.time, aula.date)"
+                  (click)="joinClass(aula)">
+                  Partecipa
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="alert alert-info d-flex align-items-center">
+        <i class="fas fa-info-circle me-2"></i>
+        <div>
+          Nessun corso programmato per questo giorno.
+        </div>
+      </div>
+    }
+
+  </div>
+</div>
+</div>

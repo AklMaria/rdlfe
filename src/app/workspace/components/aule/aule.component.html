@@ -1,0 +1,267 @@
+@if (userRole() === 'ADMIN') {
+  <div class="container-fluid">
+    <div class="row pt-4">
+      <div class="col col-12">
+        <div style="min-height: 50vh;" class="glass-card p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3>Lista Aule</h3>
+            <button class="btn btn-primary" (click)="openCreateClassroomSidebar()">
+              <i class="fas fa-plus me-2"></i>Aggiungi Aula
+            </button>
+          </div>
+          <!-- Stato di Caricamento -->
+          @if (isLoading) {
+            <div class="text-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <p class="mt-2">Caricamento aule...</p>
+            </div>
+          }
+          <!-- Tabella e Paginazione (se non in caricamento) -->
+          @if (!isLoading) {
+            <div>
+              <!-- Se ci sono aule -->
+              @if (allClassrooms.length > 0) {
+                <div>
+                  <div class="table-responsive "> <!-- Rende la tabella scrollabile su schermi piccoli -->
+                    <table class="table table-hover bg-opacity-0">
+                      <thead>
+                      <tr>
+                        <th scope="col">#ID</th>
+                        <th scope="col">Nome</th>
+                        <th class="w-25" scope="col">Descrizione</th>
+                        <th scope="col">Data</th>
+                        <th scope="col">Orario</th>
+                        <th scope="col">Durata</th>
+                        <th scope="col">Posti</th>
+                        <th scope="col">Stato</th>
+                        <th class="d-flex justify-content-end" style="width: 145px;" scope="col">Azioni</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                        @for (aula of paginatedClassrooms; track aula) {
+                          <tr>
+                            <th scope="row">{{ aula.id }}</th>
+                            <td>{{ aula.name }}</td>
+                            <td>{{ aula.description }}</td>
+                            <td>{{ aula.date | date: 'yyyy/MM/dd' }}</td>
+                            <td>{{ aula.time }}</td>
+                            <td>{{ aula.duration }}</td>
+                            <td class="text-start"> {{ aula.availableSeats }} / {{ aula.maxSeats }}</td>
+                            <td>
+                            <span class="badge rounded-pill"
+                                  [ngClass]="aula.isActive ? 'text-bg-success' : 'text-bg-secondary'">
+                              {{ aula.isActive ? 'Attiva' : 'Non Attiva' }}
+                            </span>
+                            </td>
+                            <td style="width: 120px;">
+                              <button class="btn" (click)="viewClassDetails(aula)">
+                                <i class="bi bi-eye"></i>
+                              </button>
+                              <button class="btn" (click)="openEditClassroomSidebar(aula)">
+                                <i class="bi bi-pencil"></i>
+                              </button>
+                              <button class="btn" (click)="deleteClassroom(aula.id)">
+                                <i class="bi bi-x-lg"></i>
+                              </button>
+                            </td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- Paginazione Bootstrap -->
+                  @if (totalPages > 1) {
+                    <nav aria-label="Classroom pagination">
+                      <ul class="pagination justify-content-start mt-4">
+                        <li class="page-item" [class.disabled]="currentPage === 1">
+                          <a class="page-link" href="#" (click)="goToPage(currentPage - 1); $event.preventDefault()">Prec.</a>
+                        </li>
+                        @for (page of pages; track page) {
+                          <li class="page-item" [class.active]="currentPage === page">
+                            <a class="page-link" href="#"
+                               (click)="goToPage(page); $event.preventDefault()">{{ page }}</a>
+                          </li>
+                        }
+                        <li class="page-item" [class.disabled]="currentPage === totalPages">
+                          <a class="page-link" href="#" (click)="goToPage(currentPage + 1); $event.preventDefault()">Succ.</a>
+                        </li>
+                      </ul>
+                    </nav>
+                  }
+                </div>
+              } @else {
+                <div class="alert alert-info" role="alert">
+                  Nessuna aula trovata.
+                </div>
+              }
+              <!-- Template se non ci sono aule -->
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+    <!-- Offcanvas per vedere lista utenti -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="viewSubUsersCanvas" #viewSubUsersCanvas>
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title">Utenti iscritti</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body px-3">
+        <div class="py-3">
+          <h5><strong>totale utenti iscritti:</strong> {{ classroomRegistration?.totalUsers }}</h5>
+        </div>
+        <ul class="list-group">
+          @for (user of classroomRegistration?.users; track user) {
+            <li class="list-group-item">{{ user.username }}</li>
+          }
+        </ul>
+      </div>
+    </div>
+    <!-- Offcanvas per creare una nuova aula -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="createClassroomOffcanvas" #createClassroomOffcanvas>
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title">{{ editingClassroom ? 'Modifica Aula' : 'Aggiungi Nuova Aula' }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <form [formGroup]="newClassroomForm" (ngSubmit)="onSaveClassroom()">
+          <div class="mb-3">
+            <label for="name" class="form-label">Nome Aula</label>
+            <input type="text" class="form-control" id="name" formControlName="name" required>
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label">Descrizione</label>
+            <textarea class="form-control" id="description" formControlName="description" rows="3" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="maxSeats" class="form-label">Posti Massimi</label>
+            <input type="number" class="form-control" id="maxSeats" formControlName="maxSeats" required min="1">
+          </div>
+          <div class="mb-3">
+            <label for="date" class="form-label">Data</label>
+            <input type="date" class="form-control" id="date" formControlName="date" required>
+          </div>
+          <div class="mb-3 row d-flex justify-content-between">
+            <div class="col col-6">
+              <label for="time" class="form-label">Orario</label>
+              <input type="time" class="form-control" id="time" formControlName="time" required>
+            </div>
+            <div class="col col-6">
+              <label for="duration" class="form-label">Durata</label>
+              <input type="number" class="form-control" id="duration" formControlName="duration" required>
+            </div>
+          </div>
+          <div class="form-check form-switch mb-4">
+            <input class="form-check-input" type="checkbox" role="switch" id="isActive" formControlName="isActive">
+            <label class="form-check-label" for="isActive">Aula Attiva</label>
+          </div>
+          <button type="submit" class="btn btn-success w-100" [disabled]="newClassroomForm.invalid">
+            <i class="fas fa-save me-2"></i>{{ editingClassroom ? 'Aggiorna Aula' : 'Salva Aula' }}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+} @else {
+  <div class="container-fluid">
+    <div class="row pt-4">
+      <div class="col col-12">
+        <div style="min-height: 50vh;" class="glass-card p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3>Corsi Disponibili</h3>
+          </div>
+          <!-- Stato di Caricamento -->
+          @if (isLoading) {
+            <div class="text-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <p class="mt-2">Caricamento corsi...</p>
+            </div>
+          }
+          <!-- Contenuto (se non in caricamento) -->
+          @if (!isLoading) {
+            <div>
+              <!-- Se ci sono aule -->
+              @if (paginatedClassrooms.length > 0) {
+                <div>
+                  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    @for (aula of paginatedClassrooms; track aula) {
+                      <div class="col">
+                        <div class="card h-100 shadow-sm">
+                          <div class="card-header border-0 bg-white text-black">
+                            <h6 class="card-title mb-0">{{ aula.name }}</h6>
+                          </div>
+                          <div class="card-body d-flex flex-column">
+                            <div class="d-flex align-content-center">
+                              <div
+                                class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center flex-column mb-3 me-3"
+                                style="width:65px; height: 65px;">
+                                <h5 class="mb-0 fw-bold">{{ aula.date | date:'d':'':'it' }}</h5>
+                                <h5
+                                  class="text-uppercase fw-light">{{ aula.date | date:'MMMM':'':'it'| slice:0:3 }}</h5>
+                              </div>
+                              <div class="d-flex flex-column justify-content-center align-item-center me-3">
+                                <h6 class="mb-0">Orario </h6>
+                                <div>
+                                  {{ aula.time.split(':')[0] }}:{{ aula.time.split(':')[1] }}
+                                </div>
+                              </div>
+                              <div class="d-flex flex-column justify-content-center align-item-center">
+                                <h6 class="mb-0">Durata </h6>
+                                <div>
+                                  <i class="bi bi-clock me-2"></i>{{ aula.duration }} h
+                                </div>
+                              </div>
+                            </div>
+                            <div class=""><p class="card-text">{{ aula.description }}</p></div>
+                            <div class="mt-3 d-flex justify-content-start align-item-end">
+                              <p class="mb-0 me-3"><i class="bi bi-people me-2"></i>Posti disponibili</p>
+                              <span
+                                class="badge rounded-pill bg-primary d-flex justify-content-center align-item-center">
+                              <div>{{ aula.availableSeats }} / {{ aula.maxSeats }}</div>
+                            </span>
+                            </div>
+                          </div>
+                          <div class="card-footer d-flex justify-content-end bg-white border-0 text-center">
+                            <button class="btn btn-light btn-sm w-25" (click)="subscribe(aula)">Iscriviti</button>
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                  <!-- Paginazione Bootstrap -->
+                  @if (totalPages > 1) {
+                    <nav aria-label="Classroom pagination" class="mt-4">
+                      <ul class="pagination justify-content-start">
+                        <li class="page-item" [class.disabled]="currentPage === 1"><a class="page-link" href="#"
+                                                                                      (click)="goToPage(currentPage - 1); $event.preventDefault()">Prec.</a>
+                        </li>
+                        @for (page of pages; track page) {
+                          <li class="page-item" [class.active]="currentPage === page"><a class="page-link" href="#"
+                                                                                         (click)="goToPage(page); $event.preventDefault()">{{ page }}</a>
+                          </li>
+                        }
+                        <li class="page-item" [class.disabled]="currentPage === totalPages"><a class="page-link"
+                                                                                               href="#"
+                                                                                               (click)="goToPage(currentPage + 1); $event.preventDefault()">Succ.</a>
+                        </li>
+                      </ul>
+                    </nav>
+                  }
+                </div>
+              } @else {
+                <div class="alert alert-info" role="alert">
+                  Al momento non ci sono lezioni disponibili a cui puoi iscriverti.
+                </div>
+              }
+              <!-- Template se non ci sono aule -->
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}

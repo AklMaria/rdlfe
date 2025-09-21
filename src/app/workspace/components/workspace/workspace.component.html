@@ -1,0 +1,32 @@
+<ng-container>
+  <div class="row gx-0 w-100 z-1 position-fixed">
+    <app-header></app-header>
+  </div>
+  <div class="d-flex py-5 row gx-0" [ngClass]="{'sidebar-collapsed': isSidebarCollapsed}">
+    <div class="position-fixed top-0 col" [class.col-md-2]="!isSidebarCollapsed" [class.col-md-0]="isSidebarCollapsed">
+      <app-sidebar></app-sidebar>
+      <div class="toggle-handle" (click)="toggleSidebar()">
+        <i [class]="isSidebarCollapsed ? 'bi bi-chevron-right' : 'bi bi-chevron-left'"></i>
+      </div>
+    </div>
+    <div class="col col-md-2"></div>
+    <div class="col p-5 align-items-center" [class.col-md-10]="!isSidebarCollapsed" [class.ps-5]="isSidebarCollapsed"
+         [class.col-md-12]="isSidebarCollapsed">
+      <router-outlet></router-outlet>
+
+      <div id="chat" data-bs-toggle="tooltip" data-bs-title="Default tooltip"
+           class=" position-fixed z-1 d-flex justify-content-center align-item-center rounded-circle bg-custom-green">
+        <a href="" class="text-black"><i class="fs-2 bi bi-whatsapp"></i></a>
+      </div>
+
+    </div>
+  </div>
+  @if (isSidebarCollapsed) {
+    <div [@animate.enter]="'slide-enter'"
+         [@animate.leave]="'slide-leave'"
+         class="d-flex mb-3 justify-content-between z-3 position-fixed top-90 start-50 translate-middle">
+      <app-navbar></app-navbar>
+    </div>
+  }
+</ng-container>
+

@@ -1,0 +1,163 @@
+<div class="container-fluid">
+  <div class="row pt-4">
+    <div class="col col-12">
+      <div style="min-height: 50vh;" class="glass-card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h3>Lista Utenti</h3>
+          <button class="btn btn-primary" (click)="openCreateUserSidebar()">
+            <i class="fas fa-plus me-2"></i>Aggiungi Utente
+          </button>
+        </div>
+
+        <!-- Stato di Caricamento -->
+        @if (isLoading) {
+          <div class="text-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Caricamento utenti...</p>
+          </div>
+        }
+
+        <!-- Tabella e Paginazione (se non in caricamento) -->
+        @if (!isLoading) {
+          <div>
+            <!-- Se ci sono utenti -->
+            @if (allUsers.length > 0) {
+              <div>
+                <div class="table-responsive">
+                  <table class="table table-hover bg-opacity-0">
+                    <thead>
+                    <tr>
+                      <th scope="col">#ID</th>
+                      <th scope="col">Nome</th>
+                      <th scope="col">Cognome</th>
+                      <th scope="col">Username</th>
+                      <th scope="col">Email</th>
+                      <th scope="col">Data di nascita</th>
+                      <th scope="col">Crediti disponibili</th>
+                      <th scope="col">Stato</th>
+                      <th scope="col">Azioni</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                      @for (utente of paginatedUsers; track utente) {
+                        <tr>
+                          <th scope="row">{{ utente.id }}</th>
+                          <td>{{ utente.firstName }}</td>
+                          <td>{{ utente.lastName }}</td>
+                          <td>{{ utente.username }}</td>
+                          <td>{{ utente.email }}</td>
+                          <td>{{ utente.birthDate | date:'dd/MM/yyyy' }}</td>
+                          <td>{{ utente.credits }}</td>
+                          <td>
+                          <span class="badge rounded-pill"
+                                [ngClass]="utente.state ? 'text-bg-success' : 'text-bg-secondary'">
+                            {{ utente.state ? 'Attivo' : 'Non Attivo' }}
+                          </span>
+                          </td>
+                          <td>
+                            <button class="btn" (click)="openEditUserSidebar(utente)">
+                              <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn" (click)="deleteUser(utente.id!)">
+                              <i class="bi bi-x-lg"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+                <!-- Paginazione Bootstrap -->
+                @if (totalPages > 1) {
+                <nav aria-label="User pagination">
+                  <ul class="pagination justify-content-start mt-4">
+                    <li class="page-item" [class.disabled]="currentPage === 1">
+                      <a class="page-link" href="#"
+                         (click)="goToPage(currentPage - 1); $event.preventDefault()">Prec.</a>
+                    </li>
+                    @for (page of pages; track page) {
+                      <li class="page-item" [class.active]="currentPage === page">
+                        <a class="page-link" href="#" (click)="goToPage(page); $event.preventDefault()">{{ page }}</a>
+                      </li>
+                    }
+                    <li class="page-item" [class.disabled]="currentPage === totalPages">
+                      <a class="page-link" href="#"
+                         (click)="goToPage(currentPage + 1); $event.preventDefault()">Succ.</a>
+                    </li>
+                  </ul>
+                </nav>
+                }
+              </div>
+            } @else {
+              <div class="alert alert-info" role="alert">
+                Nessun utente trovato.
+              </div>
+            }
+
+            <!-- Template se non ci sono utenti -->
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Offcanvas per creare un nuovo utente -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="createUserOffcanvas" #createUserOffcanvas>
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title">{{ editingUser ? 'Modifica Utente' : 'Aggiungi Nuovo Utente' }}</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <form [formGroup]="newUserForm" (ngSubmit)="onSaveUser()">
+        <div class="row">
+          <div class="col">
+            <div class="mb-3">
+              <label for="firstname" class="form-label">Nome</label>
+              <input type="text" class="form-control" id="firstname" formControlName="firstname" required>
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3">
+              <label for="lastname" class="form-label">Cognome</label>
+              <input type="text" class="form-control" id="lastname" formControlName="lastname" required>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input type="text" class="form-control" id="username" formControlName="username" required>
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3">
+              <label for="birthDate" class="form-label">data nascita</label>
+              <input type="date" class="form-control" id="birthDate" formControlName="birthDate" required>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" class="form-control" id="email" formControlName="email" required>
+        </div>
+        <div class="mb-3">
+          <label for="credits" class="form-label">Crediti</label>
+          <input type="number" class="form-control" id="credits" formControlName="credits" required min="0">
+        </div>
+        <div class="form-check form-switch mb-4">
+          <input class="form-check-input" type="checkbox" role="switch" id="state" formControlName="state">
+          <label class="form-check-label" for="state">Utente Attivo</label>
+        </div>
+        <button type="submit" class="btn btn-success w-100" [disabled]="newUserForm.invalid">
+          {{ editingUser ? 'Aggiorna Utente' : 'Salva Utente' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

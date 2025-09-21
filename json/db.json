@@ -1,0 +1,63 @@
+{
+  "utenti": [
+    {
+      "id": "1",
+      "nome": "Gianluca",
+      "cognome": "Ursino",
+      "email": "gianlucaursino13@gmail.com",
+      "ruolo": "utente",
+      "stato": true,
+      "crediti": 9,
+      "aule": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "2",
+      "nome": "Andrea",
+      "cognome": "Pelligra",
+      "email": "andreapelligra@gmail.com",
+      "ruolo": "admin",
+      "stato": true,
+      "crediti": 100,
+      "aule": []
+    },
+    {
+      "id": "3",
+      "nome": "Antonio",
+      "cognome": "Pelligra",
+      "email": "antoniopelligra@tiscali.it",
+      "ruolo": "utente",
+      "stato": false,
+      "crediti": 0,
+      "aule": []
+    }
+  ],
+  "aule": [
+    {
+      "id": "1",
+      "nome": "Lezione 1",
+      "descrizione": "Questa è la lezione 1",
+      "maxEntries": 20,
+      "data": "2025-07-18",
+      "orario": "14:00",
+      "users": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "2",
+      "nome": "Lezione 2",
+      "descrizione": "lezione 2 test",
+      "maxEntries": 20,
+      "data": "2025-07-25",
+      "orario": "17:00",
+      "isActive": true,
+      "users": [
+        1,2
+      ]
+    }
+  ]
+}

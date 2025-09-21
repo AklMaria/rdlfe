@@ -1,0 +1,46 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      @if (partialProfile(); as user) {
+        <div class="card">
+          <div class="card-header">
+            <h4>Complete Your Registration</h4>
+          </div>
+          <div class="card-body">
+            <p>Welcome, <strong>{{ user.firstName }} {{ user.lastName }}</strong>! Please complete your profile to continue.</p>
+
+            <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+              <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" id="username" class="form-control" formControlName="username">
+              </div>
+              <div class="mb-3">
+                <label for="birthDate" class="form-label">Birth Date</label>
+                <input type="date" id="birthDate" class="form-control" formControlName="birthDate">
+              </div>
+
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" class="form-control" formControlName="password">
+                @if (registrationForm.get('password')?.invalid && registrationForm.get('password')?.touched) {
+                  <div class="text-danger small mt-1">Password is required.</div>
+                }
+              </div>
+
+              <div class="mb-3">
+                <label for="confirmPassword" class="form-label">Confirm Password</label>
+                <input type="password" id="confirmPassword" class="form-control" formControlName="confirmPassword">
+                @if (registrationForm.errors?.['passwordsMismatch'] && registrationForm.get('confirmPassword')?.touched) {
+                  <div class="text-danger small mt-1">Passwords do not match.</div>
+                }
+              </div>
+              <button type="submit" class="btn btn-primary w-100" [disabled]="registrationForm.invalid">
+                Complete Registration
+              </button>
+            </form>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

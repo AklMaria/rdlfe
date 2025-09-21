@@ -1,0 +1,12 @@
+<div id="sideBar" class="overflow-hidden d-flex flex-column pt-2 align-items-center" style="height: 100vh;">
+  <div class="w-100 pb-4 d-flex justify-content-center align-item-center">
+    <img class="w-50" src="../../../../../assets/logo-white.png" alt="">
+  </div>
+  <div style="height: 30vh;" class="w-100 px-3 d-flex flex-column align-items-center justify-content-center ">
+    @for (item of menuItems; track item) {
+      <a class="w-100 py-2 text-decoration-none fs-6" [routerLink]="item.route">
+        <p class="mb-0 fs-4"><i [class]="item.icon"></i> {{ item.label }}</p>
+      </a>
+    }
+  </div>
+</div>

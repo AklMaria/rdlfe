@@ -1,0 +1,116 @@
+<div class="container mt-5">
+  <div class="card shadow-lg">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">Profilo Utente</h4>
+      <button class="btn btn-sm btn-primary" (click)="toggleEdit()">
+        {{ isEditing ? 'Salva' : 'Modifica' }}
+      </button>
+    </div>
+
+    <div class="card-body">
+      @if (utente) {
+      <form (ngSubmit)="saveChanges()">
+
+        <!-- Nome e Cognome -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Nome</label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="utente.firstName"
+              name="firstName"
+              [readonly]="!isEditing" />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Cognome</label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="utente.lastName"
+              name="lastName"
+              [readonly]="!isEditing" />
+          </div>
+        </div>
+
+        <!-- Username ed Email -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Username</label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="utente.username"
+              name="username"
+              [readonly]="!isEditing" />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              [(ngModel)]="utente.email"
+              name="email"
+              [readonly]="!isEditing" />
+          </div>
+        </div>
+
+        <!-- Data di nascita e Ruolo -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Data di nascita</label>
+            <input
+              type="date"
+              class="form-control"
+              [(ngModel)]="utente.birthDate"
+              name="birthDate"
+              [readonly]="!isEditing" />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Ruolo</label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="utente.role"
+              name="role"
+              [readonly]="!isEditing" />
+          </div>
+        </div>
+
+        <!-- Stato e Crediti -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Stato</label>
+            <select
+              class="form-select"
+              [(ngModel)]="utente.state"
+              name="state"
+              [disabled]="!isEditing">
+              <option [ngValue]="true">Attivo</option>
+              <option [ngValue]="false">Disabilitato</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Crediti</label>
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="utente.credits"
+              name="credits"
+              [readonly]="!isEditing" />
+          </div>
+        </div>
+
+        <!-- Pulsanti azione -->
+        @if (isEditing) {
+        <div class="d-flex justify-content-end gap-2">
+          <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Annulla</button>
+          <button type="submit" class="btn btn-success">Salva</button>
+        </div>
+        }
+
+      </form>
+      }
+    </div>
+  </div>
+</div>

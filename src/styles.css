@@ -1,0 +1,82 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+
+body{
+    background-color: #f1f3f9 !important;
+    background-image: url(./assets/background.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 100vh;
+}
+.pt-6{
+    padding-top: 4.5rem;
+}
+.bg-custom-green{
+    background-color: #25D366;
+}
+.btn-outline-primary{
+  border-color: #003566 !important;
+  color: #003566 !important;
+}
+.btn-outline-primary:hover{
+  border-color: #003566 !important;
+  color: #fff !important;
+  background-color: #003566 !important;
+}
+.btn-primary{
+  background-color: #003566 !important;
+  border-color: #003566 !important;
+}
+#chat{
+    bottom: 3%;
+    right: 3%;
+    width: 50px;
+    height: 50px;
+}
+.glass-card {
+    height: auto;
+    background: rgba(255, 255, 255, 0.21);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    position: relative;
+
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.8),
+      transparent
+    );
+  }
+  .circle-dropdown-toggle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #0d6efd;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    line-height: 48px;
+    font-size: 16px;
+    border: none;
+  }
+  /* Nasconde la freccetta della dropdown-toggle */
+  .circle-dropdown-toggle::after {
+    display: none !important;
+  }
+  ::ng-deep table th, table td{
+    background-color: transparent !important;
+}

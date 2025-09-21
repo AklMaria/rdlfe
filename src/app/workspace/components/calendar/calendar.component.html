@@ -1,0 +1,153 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col col-12 d-flex flex-column">
+      <!-- Header Navigazione -->
+      <div class="row justify-content-between">
+        <div class="col d-flex align-items-center col-md-4">
+          <button
+            class="btn me-2"
+            [class.btn-primary]="currentView() === 'month'"
+            [class.btn-outline-primary]="currentView() !== 'month'"
+            (click)="setView('month')">
+            <i class="fas fa-calendar-alt me-1"></i>
+            Mese
+          </button>
+
+          <button
+            class="btn me-2"
+            [class.btn-primary]="currentView() === 'week'"
+            [class.btn-outline-primary]="currentView() !== 'week'"
+            (click)="setView('week')">
+            <i class="fas fa-calendar-week me-1"></i>
+            Settimana
+          </button>
+
+          <button
+            class="btn"
+            [class.btn-primary]="currentView() === 'day'"
+            [class.btn-outline-primary]="currentView() !== 'day'"
+            (click)="setView('day')">
+            <i class="fas fa-calendar-day me-1"></i>
+            Giorno
+          </button>
+        </div>
+        <div class="col d-flex justify-content-center align-content-center col-md-4">
+          <span class="fs-2 fw-bold current-month">{{ currentMonthName() }}</span>
+        </div>
+        <div class="col d-flex justify-content-end align-items-end col-md-4">
+          <button class="btn btn-outline-primary" (click)="goToPreviousPeriod()">Precedente</button>
+          <button class="btn mx-2 btn-outline-dark" (click)="goToToday()">Oggi</button>
+          <button class="btn btn-outline-primary" (click)="goToNextPeriod()">Successivo</button>
+        </div>
+      </div>
+
+      <!-- Vista Mensile -->
+      @if (currentView() === 'month') {
+        <div class="calendar-month mt-3">
+          <div class="calendar-weekdays w-100 d-flex">
+            @for (weekDay of weekDays(); track trackWeekday($index, weekDay)) {
+              <div class="calendar-weekday flex-fill text-center fw-bold">
+                {{ weekDay }}
+              </div>
+            }
+          </div>
+
+          <div class="calendar-grid w-100 d-grid">
+            @for (day of daysOfMonth(); track trackDate($index, day)) {
+              <div
+                (click)="openSidebar(day)"
+                class="calendar-grid-cell position-relative"
+                [ngClass]="{
+            'calendar-grid-cell-active': isActiveDay(day),
+            'calendar-grid-cell-inactive': isInactiveDay(day)
+          }"
+              >
+                {{ day.getDate() }}
+                <!-- Pallino se ci sono classi -->
+                @if (hasClassOnDay(day)) {
+                <div class="bg-primary rounded-circle position-absolute"
+                  style="width: 8px; height: 8px; bottom: 4px; right: 4px;"
+                ></div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Vista Settimanale -->
+      @if (currentView() === 'week') {
+        <div class="calendar-week mt-3">
+          <div class="calendar-weekdays w-100 d-flex">
+            @for (Day of daysOfWeek(); track trackDate($index, Day)) {
+              <div
+                class="calendar-weekday d-flex flex-column align-items-center flex-fill"
+              >
+                <div class="weekday-name fw-bold">{{ formatDate(Day, {weekday: 'short'}).toUpperCase() }}</div>
+                <div class="weekday-date fw-light">{{ formatDate(Day, {day: '2-digit', month: 'short'}) }}</div>
+                <!-- <div
+                @if="hasAuleOnDay(Day)"
+                  class="bg-primary rounded-circle position-absolute"
+                  style="width: 8px; height: 8px; bottom: 4px; right: 4px;"
+                ></div> -->
+              </div>
+            }
+          </div>
+
+          <div class="calendar-week-grid border w-100 d-flex">
+            @for (Day of daysOfWeek(); track trackDate($index, Day)) {
+              <div class="calendar-week-day flex-fill border border-1 m-1 p-1">
+                @for (hour of hoursOfDay(); track trackHour($index, hour)) {
+                  <div class="calendar-hour-row d-flex align-items-center border-bottom py-2">
+                    <div class="calendar-hour" style="width: 50px;">
+                      {{ hour.getHours() < 10 ? '0' + hour.getHours() : hour.getHours() }}:00
+                    </div>
+                    <div class="flex-grow-1">
+                      @for (aula of getAuleForHour(Day, hour.getHours()); track trackAula($index, aula)) {
+                        <div
+                          class="aula-event"
+                          (click)="onWeekDayClick(Day)"
+                          title="Clicca per vedere i dettagli">
+                          {{ aula.name }}
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Vista Giornaliera -->
+      @if (currentView() === 'day') {
+        <div class="calendar-day mt-3">
+          <h4>{{ formatDate(activeDay(), {day: '2-digit', month: 'short', year: 'numeric'}) }}</h4>
+          <div class="calendar-day-grid">
+            @for (hour of hoursOfDay(); track trackHour($index, hour)) {
+              <div
+                class="hour-row border-bottom d-flex align-items-center py-2"
+              >
+                <div class="calendar-hour" style="width: 50px;">
+                  {{ hour.getHours() < 10 ? '0' + hour.getHours() : hour.getHours() }}:00
+                </div>
+                <div class="flex-grow-1">
+                  @for (aula of getAuleForHour(activeDay(), hour.getHours()); track trackAula($index, aula)) {
+                    <div
+                      class="aula-event cursor-pointer"
+                      (click)="openSidebar(activeDay())"
+                      title="Clicca per vedere i dettagli">
+                      <strong>{{ aula.name }}</strong>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,3 @@
+::ng-deep table th, table td{
+    background-color: transparent !important;
+}

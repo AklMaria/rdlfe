@@ -1,0 +1,81 @@
+/* Imposta transizioni fluide */
+.d-flex {
+    transition: all 0.3s ease;
+}
+.col-md-0{
+    width: 0;
+    transition: .3s ease;
+}
+.top-90{
+  top: 95%;
+}
+  /* Quando la sidebar è collassata */
+.sidebar-collapsed .col-md-1 {
+    width: 0 !important;
+    overflow: hidden;
+}
+.col-md-2{
+    transition: .3s ease;
+}
+.sidebar-collapsed .fullWidth {
+    width: 94% !important;
+    justify-content: flex-end;
+    transition: .3s ease;
+}
+/* Stile della linguetta */
+.toggle-handle {
+    position: absolute;
+    top: 50%; /* Posiziona la linguetta a metà altezza */
+    right: -15px; /* Fa uscire la linguetta dal lato della sidebar */
+    transform: translateY(-50%); /* Centra verticalmente */
+    width: 30px;
+    height: 50px;
+    background-color: #003566; /* Colore della linguetta */
+    color: white;
+    border-radius: 0 5px 5px 0; /* Bordo arrotondato solo a sinistra */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10; /* Assicurati che sia sopra il contenuto */
+  }
+  /* Quando la sidebar è collassata */
+.sidebar-collapsed .toggle-handle {
+    right: -25px; /* Sposta la linguetta verso destra per mostrare l'icona correttamente */
+  }
+
+  .sidebar-collapsed app-sidebar {
+    width: 0; /* Nascondi la sidebar */
+    overflow: hidden;
+  }
+
+@keyframes slide-in-bottom {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-out-bottom {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+.slide-enter {
+  animation: slide-in-bottom 0.3s ease-out forwards;
+}
+
+.slide-leave {
+  animation: slide-out-bottom 0.3s ease-in forwards;
+}

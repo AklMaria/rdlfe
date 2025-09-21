@@ -1,0 +1,78 @@
+<div style="height: 100vh;" class="p-5 container-fluid">
+  <div style="height: 30vh;" class="row d-flex justify-content-center gx-0">
+    <div class="col col-md-1">
+      <img src="../../../../../assets/logo.png" class="w-100" alt="">
+    </div>
+  </div>
+  <div class="row gx-0 d-flex justify-content-center">
+    <div class="col col-md-3">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="bg-white p-4 rounded bg-opacity-50">
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input
+            type="text"
+            id="email"
+            class="form-control"
+            formControlName="email"
+            [ngClass]="{ 'is-invalid': loginForm.get('email')?.touched && loginForm.get('email')?.invalid }"
+          />
+          @if (loginForm.get('email')?.touched && loginForm.get('email')?.invalid) {
+            <div class="invalid-feedback">
+              Email obbligatoria
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            formControlName="password"
+            [ngClass]="{ 'is-invalid': loginForm.get('password')?.touched && loginForm.get('password')?.invalid }"
+          />
+          @if (loginForm.get('password')?.touched && loginForm.get('password')?.invalid) {
+          <div class="invalid-feedback">
+            Password obbligatoria
+          </div>
+          }
+        </div>
+
+        <button type="submit" class="w-100 btn btn-primary mb-3">Login</button>
+
+        <div class="d-flex align-items-center my-3">
+          <hr class="flex-grow-1">
+          <span class="px-2 text-muted">oppure</span>
+          <hr class="flex-grow-1">
+        </div>
+
+        <div class="d-grid gap-2">
+          <button type="button" (click)="loginWithGoogle()"
+                  class="btn d-flex align-items-center justify-content-center google-btn">
+            <div class="google-icon-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="google-icon">
+                <path fill="#EA4335"
+                      d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.65-6.65C34.55 3.14 29.53 1 24 1 14.83 1 7.21 6.57 3.23 14.77l7.74 6C12.44 14.19 17.65 9.5 24 9.5z"></path>
+                <path fill="#4285F4"
+                      d="M46.7 24.5c0-.98-.07-1.89-.2-2.78H24v7.74h12.42c-.44 2.92-2.11 5.46-4.9 7.24l7.74 6c4.54-4.44 7.23-11 7.23-18.19z"></path>
+                <path fill="#FBBC05"
+                      d="M10.95 28.5c-.34-1.01-.54-2.14-.54-3.5 0-1.36.2-2.49.54-3.5l-7.74-6C3.23 23.43 3.23 30.57 10.95 28.5z"></path>
+                <path fill="#34A853"
+                      d="M24 47c6.48 0 11.93-2.13 15.89-5.81l-7.74-6c-2.88 1.9-6.59 3.11-8.15 3.11-6.45 0-11.95-4.38-13.88-10.46l-7.74 6c3.98 8.1 11.5 13.67 20.01 13.67z"></path>
+              </svg>
+            </div>
+            <span class="ms-3">Sign in with Google</span>
+          </button>
+
+<!--          <button type="button" (click)="loginWithFacebook()"-->
+<!--                  class="btn btn-primary d-flex align-items-center justify-content-center facebook-btn">-->
+<!--            <i class="bi bi-facebook me-2"></i>-->
+<!--            <span>Sign in with Facebook</span>-->
+<!--          </button>-->
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
