@@ -3,10 +3,15 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './auth/components/login/login.component';
 import {authGuard} from "./auth.guard";
 import {RegistrationComponent} from "./auth/components/registration/registration.component";
+import { HomepageComponent } from './workspace/components/homepage/homepage.component';
 
 export const routes: Routes = [
   {
     path: '',
+    component: HomepageComponent
+  },
+  {
+    path: 'login',
     component: LoginComponent
   },
   {
