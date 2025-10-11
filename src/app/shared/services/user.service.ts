@@ -37,8 +37,8 @@ export class UserService {
       return this.httpService.get<Aula[]>(`/users/${userId}/classrooms`);
     }
 
-  doesUserExist(email: string): Observable<Boolean> {
+  doesUserExist(email: string): Observable<number> {
     let params = new HttpParams().set('email', email);
-    return this.httpService.get<Boolean>('/users/exist', params);
+    return this.httpService.get<number>('/users/exist', params);
   }
 }

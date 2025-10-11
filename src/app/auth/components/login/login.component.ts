@@ -71,7 +71,7 @@ export class LoginComponent implements OnInit {
 
     try {
       const exists = await firstValueFrom(this.userService.doesUserExist(email));
-      if (exists) {
+      if (exists != 0) {
         const credential = GoogleAuthProvider.credentialFromResult(userCredentials)!;
         const googleProfile = await this.fetchGoogleUserProfile(credential.accessToken!);
         const nameInfo = googleProfile.names[0];
@@ -80,6 +80,7 @@ export class LoginComponent implements OnInit {
           username: nameInfo?.displayName || userCredentials.user.displayName,
           image: userCredentials.user.photoURL!,
           firstName: nameInfo?.givenName,
+          id: exists,
           lastName: nameInfo?.familyName,
           email: userCredentials.user.email!,
           birthDate: birthday ? `${birthday.day}/${birthday.month}/${birthday.year}` : undefined
