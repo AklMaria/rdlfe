@@ -1,0 +1,110 @@
+#chi-siamo, #mission{
+    background-color: #283641 !important;
+}
+header{
+    background-color: #151c21;
+
+}
+#HeaderDiv{
+    background-image: url('../../../../assets/5590457.jpg');
+    background-size: cover;
+}
+header a.active{
+    background-color: #283641 !important;
+}
+/* CUSTOM */
+.text-muted{
+    font-size: 1.775rem !important;
+}
+.pricing-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    border-radius: 15px;
+}
+
+.pricing-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.feature-list li {
+    margin-bottom: 0.8rem;
+    color: #6c757d;
+}
+
+.popular-badge {
+    position: absolute;
+    top: -12px;
+    right: 20px;
+    border-radius: 20px;
+}
+
+.gradient-custom {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+}
+
+.service-card {
+            transition: all 0.3s ease;
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            background: linear-gradient(145deg, #ffffff, #f3f3f3);
+            
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            
+        }
+        
+        .icon-wrapper {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        }
+        
+        .custom-badge {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .service-title {
+            color: #2d3748;
+            font-weight: 600;
+        }
+        
+        .service-text {
+            color: #718096;
+            font-size: 0.95rem;
+        }
+
+        .icon-wrapper i {
+            font-size: 2.5rem; /* 40px */
+            color: white;
+        }
+
+#contattaci{
+    background-color: #075E54;
+    transition: .3s ease;
+}   
+#contattaci:hover{
+    background-color: #128C7E;
+    transition: .3s ease;
+}   
+#logoWhatapp{
+    background-image: url(../../../../assets/whatsapp-logo.svg);
+    background-position: center;
+    background-size: 50%;
+    background-repeat: no-repeat;
+}     
+#footer{
+    background-color: #151C21;
+}
