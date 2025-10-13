@@ -19,13 +19,18 @@
             }
 
           </button>
-          <ul class="dropdown-menu dropdown-menu-end">
-<!--            <li><a class="dropdown-item" href="#">Profilo</a></li>-->
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item text-danger" (click)="logout()" style="cursor: pointer;">Logout</a></li>
-          </ul>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li>
+             <a class="dropdown-item" routerLink="profilo">Profilo</a>
+          </li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+          <li>
+            <a class="dropdown-item text-danger" (click)="logout()" style="cursor: pointer;">Logout</a>
+          </li>
+        </ul>
+
         </div>
       } @else {
         <div class="dropdown">
