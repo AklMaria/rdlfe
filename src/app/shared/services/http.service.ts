@@ -36,14 +36,21 @@ export class HttpService {
   }
 
   // Metodo POST generico
-  post<T>(endpoint: string, data: any): Observable<T> {
-    return this.http.post<T>(`${this.baseUrl}${endpoint}`, data, {
-      headers: this.defaultHeaders
-    }).pipe(
-      retry(1),
-      catchError(this.handleError)
-    );
+ post<T>(endpoint: string, data: any): Observable<T> {
+  const options: any = {
+    observe: 'body' as const // 👈 forza il tipo corretto
+  };
+
+  if (!(data instanceof FormData)) {
+    options.headers = this.defaultHeaders;
   }
+
+  return this.http.post(`${this.baseUrl}${endpoint}`, data, options).pipe(
+  retry(1),
+  catchError(this.handleError)
+) as Observable<T>;
+}
+
 
   // Metodo PUT generico
   put<T>(endpoint: string, data: any): Observable<T> {

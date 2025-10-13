@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { Aula, Utente } from '../models/shared.models';
+import { Aula, DocumentItem, Utente } from '../models/shared.models';
 import { HttpService } from './http.service';
 import {HttpParams} from "@angular/common/http";
 
@@ -41,4 +41,21 @@ export class UserService {
     let params = new HttpParams().set('email', email);
     return this.httpService.get<number>('/users/exist', params);
   }
+
+  uploadDocument(userId: number, file: File): Observable<void> {
+  const formData = new FormData();
+  formData.append('userId', userId.toString());
+  formData.append('file', file);
+  console.log(formData);
+
+  return this.httpService.post<void>('/docs', formData);
+}
+
+  getDocumentsByUserId(userId: number): Observable<DocumentItem[]> {
+  return this.httpService.get<DocumentItem[]>(`/docs/${userId}`);
+}
+deleteDocument(documentId: number): Observable<void> {
+  return this.httpService.delete<void>(`/docs/${documentId}`);
+}
+  
 }

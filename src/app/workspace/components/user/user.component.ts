@@ -57,7 +57,8 @@ export class UserComponent implements OnInit, AfterViewInit {
       birthDate: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       credits: [0, [Validators.required, Validators.min(0)]],
-      state: [true, Validators.required]
+      state: [true, Validators.required],
+      userLevel: ['BEGINNER', Validators.required]
     });
   }
 
@@ -112,7 +113,8 @@ export class UserComponent implements OnInit, AfterViewInit {
       birthDate: user.birthDate,
       email: user.email,
       credits: user.credits,
-      state: user.state
+      state: user.state,
+      userLevel: user.userLevel || 'BEGINNER'
     });
     this.createUserOffcanvas.show();
   }

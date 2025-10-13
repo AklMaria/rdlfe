@@ -22,6 +22,17 @@ export interface Utente{
     role?: string;
     state?: boolean;
     credits?: number;
+    userLevel?: string;
+}
+
+export interface DocumentRequest {
+  userId: number;
+  content: string;
+}
+export interface DocumentItem {
+  id: number;
+  fileName: string;
+  contentType?: string;
 }
 
 export interface UserRegistered {

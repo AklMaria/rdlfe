@@ -34,6 +34,7 @@
                       <th scope="col">Cognome</th>
                       <th scope="col">Username</th>
                       <th scope="col">Email</th>
+                      <th scope="col">Livello</th>
                       <th scope="col">Data di nascita</th>
                       <th scope="col">Crediti disponibili</th>
                       <th scope="col">Stato</th>
@@ -48,6 +49,7 @@
                           <td>{{ utente.lastName }}</td>
                           <td>{{ utente.username }}</td>
                           <td>{{ utente.email }}</td>
+                          <td>{{ utente.userLevel }}</td>
                           <td>{{ utente.birthDate | date:'dd/MM/yyyy' }}</td>
                           <td>{{ utente.credits }}</td>
                           <td>
@@ -154,6 +156,15 @@
           <input class="form-check-input" type="checkbox" role="switch" id="state" formControlName="state">
           <label class="form-check-label" for="state">Utente Attivo</label>
         </div>
+        <div class="mb-3">
+          <label for="userLevel" class="form-label">Livello Utente</label>
+          <select id="userLevel" class="form-select" formControlName="userLevel">
+            <option value="BEGINNER">Base</option>
+            <option value="INTERMEDIATE">Intermedio</option>
+            <option value="ADVANCED">Avanzato</option>
+          </select>
+        </div>
+
         <button type="submit" class="btn btn-success w-100" [disabled]="newUserForm.invalid">
           {{ editingUser ? 'Aggiorna Utente' : 'Salva Utente' }}
         </button>
