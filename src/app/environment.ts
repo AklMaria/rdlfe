@@ -9,5 +9,5 @@ export const environment = {
     messagingSenderId: "633949744388",
     appId: "1:633949744388:web:a3a0607858b9b3929f7451"
   },
-  apiUrl: "https://localhost:8082/api"
+  apiUrl: "https://backend-426407479258.europe-west9.run.app/api"
 }

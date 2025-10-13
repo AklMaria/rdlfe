@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { DocumentItem, DocumentRequest, Utente } from '../../../shared/models/shared.models';
 import {FormsModule} from "@angular/forms";
 import {CommonModule} from "@angular/common";
 import { UserService } from '../../../shared/services/user.service';
+import { UserStateService } from '../../../auth/services/user-state.service';
 
 
 @Component({
@@ -19,32 +20,41 @@ export class ProfiloComponent implements OnInit{
 
   selectedFile?: File;
   isUploading = false;
-  
+  private userState = inject(UserStateService);
+  profile = this.userState.profile;
+  currentUserId = computed(() => this.profile()?.id!);
+  utente : Utente | undefined;
   ngOnInit(): void {
     this.loadDocuments();
+    this.loadCurrentUserInfo();
+
   }
   constructor(
     private userService: UserService,
     
   ) {}
 
-  utente: Utente = {
-    firstName: 'Mario',
-    lastName: 'Rossi',
-    id: 1,
-    username: 'mrossi',
-    email: 'mario.rossi@example.com',
-    birthDate: '1990-05-12',
-    role: 'USER',
-    state: true,
-    credits: 20,
-    userLevel: 'BEGINNER',
-    
-  };
+
 
   isEditing = false;
   private backup!: Utente;
   documents: DocumentItem[] = [];
+
+
+
+
+  loadCurrentUserInfo(){
+       this.userService.getUserById(this.currentUserId()).subscribe({
+      next: (user) => {
+        this.utente = user
+      },
+      error: (err) => {
+        console.error('Errore nel caricamento dell utente', err);
+
+      }
+    });
+    
+  }
 
   toggleEdit(): void {
     if (!this.isEditing) {
