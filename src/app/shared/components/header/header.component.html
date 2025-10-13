@@ -20,9 +20,11 @@
 
           </button>
         <ul class="dropdown-menu dropdown-menu-end">
-          <li>
+          @if (utente.role === "USER") {
+           <li >
              <a class="dropdown-item" routerLink="profilo">Profilo</a>
           </li>
+          }
           <li>
             <hr class="dropdown-divider">
           </li>
