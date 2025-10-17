@@ -15,7 +15,14 @@ export class HeaderComponent {
   private loginService = inject(LoginService)
   private userState = inject(UserStateService);
 
-  profile = this.userState.profile;
+  // profile = this.userState.profile;
+  profile!: any;
+
+  constructor() {
+    console.log('Header profile:', this.profile);
+    this.profile = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')!) : null;
+
+  }
 
   getIniziali(name: string | null, surname: string | null): string {
     if (name && surname) {

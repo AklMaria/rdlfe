@@ -42,6 +42,7 @@ export class LoginComponent implements OnInit {
       next: (loggedInUser: Utente) => {
         console.log('login riuscito', loggedInUser);
         this.userState.setUtente(loggedInUser);
+        sessionStorage.setItem('user', JSON.stringify(loggedInUser));
         this.errorMessage = '';
         this.router.navigate(['/workspace/dashboard']);
       }, error: (err) => {
