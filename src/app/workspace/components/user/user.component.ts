@@ -55,8 +55,8 @@ export class UserComponent implements OnInit, AfterViewInit {
       this.createUserOffcanvas = new (window as any).bootstrap.Offcanvas(this.createUserOffcanvasElement.nativeElement);
     }
     if (this.userDocumentsOffcanvasElement) {
-    this.userDocumentsOffcanvas = new (window as any).bootstrap.Offcanvas(this.userDocumentsOffcanvasElement.nativeElement);
-}
+      this.userDocumentsOffcanvas = new (window as any).bootstrap.Offcanvas(this.userDocumentsOffcanvasElement.nativeElement);
+    }
   }
 
   initForm(): void {

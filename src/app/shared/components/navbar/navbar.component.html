@@ -1,5 +1,5 @@
 <div style="background-color: #003566;"
-     class="w-100 rounded-3 d-flex align-items-center justify-content-between opacity-75">
+     class="w-100 rounded-3 d-flex align-items-center justify-content-between">
 
 
   <!-- Solo user -->
@@ -19,26 +19,34 @@
       </a>
       <!-- ✅ NUOVE VOCI DI MENU -->
       <a class="w-100 px-4 text-center py-2 text-decoration-none fs-6"
-        routerLink="sites">
-        <i class="text-white fs-3 bi bi-link-45deg"></i>
+        routerLink="affiliazioni">
+        <i class="text-white fs-3 bi bi-share"></i>
       </a>
        
       <a class="w-100 px-4 text-center py-2 text-decoration-none fs-6"
         routerLink="corsi-completati">
-        <i class="text-white fs-3 bi bi-link-45deg"></i>
+        <i class="text-white fs-3 bi bi-book-fill"></i>
       </a>
     </ng-container>
   } @else if (userRole() === 'ADMIN') {
 
     <!-- Solo admin -->
     <ng-container>
+       <a class="w-100 px-4 text-center py-2 text-decoration-none fs-6"
+         routerLink="admin">
+        <i class="text-white fs-3 bi bi-house"></i>
+      </a>
       <a class="w-100 px-4 text-center py-2 text-decoration-none fs-6"
-         routerLink="gestione-utenti">
+         routerLink="corsi">
+        <i class="text-white fs-3 bi bi-book"></i>
+      </a>
+      <a class="w-100 px-4 text-center py-2 text-decoration-none fs-6"
+         routerLink="utenti">
         <i class="text-white fs-3 bi bi-people"></i>
       </a>
       <a class="w-100 px-4 text-center py-2 text-decoration-none fs-6"
-         routerLink="report">
-        <i class="text-white fs-3 bi bi-graph-up"></i>
+         routerLink="affiliazioni">
+        <i class="text-white fs-3 bi bi-share"></i>
       </a>
     </ng-container>
   }

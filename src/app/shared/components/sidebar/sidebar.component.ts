@@ -31,7 +31,7 @@ export class SidebarComponent implements OnInit{
     if (this.userRole() === 'ADMIN') {
       this.menuItems = [{icon:'bi bi-house', label: 'Amministrazione', route: 'admin'}, {icon:'bi bi-book', label: 'Corsi', route: 'corsi'},{icon:'bi bi-people', label: 'Utenti', route: 'utenti'},{icon:'bi bi-share', label: 'Iscriviti', route: 'affiliazioni'}];
     } else if (this.userRole() === 'USER') {
-      this.menuItems = [{icon:'bi bi-house', label: 'Dashboard', route: 'dashboard'},{icon:'bi bi-book', label: 'Corsi disponibili', route: 'corsi'},{icon:'bi bi-book-half', label: 'I miei corsi', route: 'i-miei-corsi'},{icon:'bi bi-share', label: 'Iscriviti', route: 'affiliazioni'},{icon:'bi bi-book-half', label: 'Corsi completati', route: 'corsi-completati'}];
+      this.menuItems = [{icon:'bi bi-house', label: 'Dashboard', route: 'dashboard'},{icon:'bi bi-book', label: 'Corsi disponibili', route: 'corsi'},{icon:'bi bi-book-half', label: 'I miei corsi', route: 'i-miei-corsi'},{icon:'bi bi-share', label: 'Iscriviti', route: 'affiliazioni'},{icon:'bi bi-book-fill', label: 'Corsi completati', route: 'corsi-completati'}];
     } else {
       this.menuItems = []; 
     }

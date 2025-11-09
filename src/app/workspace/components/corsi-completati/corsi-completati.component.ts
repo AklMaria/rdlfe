@@ -7,6 +7,7 @@ import { InscriptionsService } from '../../../shared/services/inscriptions.servi
 import { UserService } from '../../../shared/services/user.service';
 import { CommonModule, DatePipe, NgClass, SlicePipe } from '@angular/common';
 
+
 @Component({
   selector: 'app-corsi-completati',
   standalone: true,
@@ -23,10 +24,16 @@ export class CorsiCompletatiComponent implements OnInit{
 
   @ViewChild('createClassroomOffcanvas') createClassroomOffcanvasElement!: ElementRef;
   @ViewChild('viewSubUsersCanvas') showSubUsersOffcanvasElement!: ElementRef;
+  @ViewChild('courseDocumentOffcanvas') courseDocumentOffcanvasElement!: ElementRef;
 
   allClassroomsCompleted: Aula[] = [];
   paginatedClassrooms: Aula[] = [];
   isLoading = true;
+
+  courseDocuments: DocumentItem[] = [];
+
+  isDocsLoading = false;
+  selectedCourse: Aula | null = null;
 
   // Proprietà per la paginazione
   currentPage = 1;
@@ -37,6 +44,7 @@ export class CorsiCompletatiComponent implements OnInit{
   newClassroomForm!: FormGroup;
   private createClassroomOffcanvas: any;
   private showSubUsersOffcanvas: any;
+  private courseDocumentOffcanvas: any;
   editingClassroom: Aula | null = null;
 
   // Proprietà per ruolo utente
@@ -72,6 +80,27 @@ export class CorsiCompletatiComponent implements OnInit{
     if (this.showSubUsersOffcanvasElement) {
       this.showSubUsersOffcanvas = new (window as any).bootstrap.Offcanvas(this.showSubUsersOffcanvasElement.nativeElement);
     }
+     if (this.courseDocumentOffcanvasElement) {
+      this.courseDocumentOffcanvas = new (window as any).bootstrap.Offcanvas(this.courseDocumentOffcanvasElement.nativeElement);
+    }
+  }
+  openCourseDocuments(aula: Aula): void {
+    this.selectedCourse = aula;
+    this.isDocsLoading = true;
+    this.courseDocuments = [];
+
+    
+    this.classroomsService.getClassroomDocument(aula.id!).subscribe({
+      next: (docs) => {
+        this.courseDocuments = docs;
+        this.isDocsLoading = false;
+        this.courseDocumentOffcanvas.show();
+      },
+      error: (err) => {
+        console.error('Errore nel caricamento documenti:', err);
+        this.isDocsLoading = false;
+      }
+    });
   }
 
   loadClassrooms(): void {

@@ -20,7 +20,7 @@
         <td>{{ sito.name }}</td>
         <td><a [href]="sito.link" target="_blank">{{ sito.link }}</a></td>
         @if (userRole() === 'ADMIN') {
-          <td class="d-flex gap-2">
+          <td class="d-flex justify-content-end gap-2">
             <!-- <button type="button" class="btn btn-primary" (click)="updateLink(sito)">Modifica</button> -->
             <button type="button" class="btn btn-danger" (click)="deleteLink(sito)">Elimina</button>
           </td>

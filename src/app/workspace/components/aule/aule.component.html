@@ -28,7 +28,7 @@
                     <table class="table table-hover bg-opacity-0">
                       <thead>
                       <tr>
-                        <th scope="col">#ID</th>
+                        <!-- <th scope="col">#ID</th> -->
                         <th scope="col">Nome</th>
                         <th class="w-25" scope="col">Descrizione</th>
                         <th scope="col">Data</th>
@@ -42,10 +42,10 @@
                       <tbody>
                         @for (aula of paginatedClassrooms; track aula) {
                           <tr>
-                            <th scope="row">{{ aula.id }}</th>
+                            <!-- <th scope="row">{{ aula.id }}</th> -->
                             <td>{{ aula.name }}</td>
                             <td>{{ aula.description }}</td>
-                            <td>{{ aula.date | date: 'yyyy/MM/dd' }}</td>
+                            <td>{{ aula.date | date: 'dd/MM/yyyy' }}</td>
                             <td>{{ aula.time }}</td>
                             <td>{{ aula.duration }}</td>
                             <td class="text-start"> {{ aula.availableSeats }} / {{ aula.maxSeats }}</td>
@@ -56,6 +56,9 @@
                             </span>
                             </td>
                             <td style="width: 120px;">
+                              <button class="btn" (click)="openCourseDocuments(aula)">
+                              <i class="bi bi-file-earmark-text"></i>
+                              </button>
                               <button class="btn" (click)="viewClassDetails(aula)">
                                 <i class="bi bi-eye"></i>
                               </button>
@@ -173,6 +176,76 @@
         </form>
       </div>
     </div>
+    <!-- Offcanvas Documenti Corso -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="courseDocumentOffcanvas" #courseDocumentOffcanvas>
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documenti corso {{ selectedCourse?.name }}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Chiudi"></button>
+  </div>
+  <div class="offcanvas-body">
+    @if (isDocsLoading) {
+      <div class="text-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Caricamento...</span>
+        </div>
+        <p class="mt-2">Caricamento documenti...</p>
+      </div>
+    } @else {
+      @if (courseDocuments.length > 0) {
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Nome Documento</th>
+                <th>Scarica</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (doc of courseDocuments; track doc) {
+                <tr>
+                  <td>{{ doc.fileName }}</td>  
+                  <td>
+                    <button class="btn btn-sm btn-outline-primary" (click)="downloadDocument(doc)">
+                      <i class="bi bi-download me-1"></i>Scarica
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+          <div>
+        <label for="document-upload" class="btn btn-sm btn-success mb-0">
+          <i class="bi bi-upload"></i> Carica Documento
+        </label>
+        <!-- Aggiungi (change)="onFileSelected($event)" per gestire il file selezionato nel component -->
+        <input
+          id="document-upload"
+          type="file"
+          accept=".pdf,image/*"
+          class="d-none"
+          (change)="onFileSelected($event)"
+        >
+      </div>
+        </div>
+      } @else {
+        <div class="alert alert-info">Nessun documento trovato per questo corso.</div>
+        <div>
+        <label for="document-upload" class="btn btn-sm btn-success mb-0">
+          <i class="bi bi-upload"></i> Carica Documento
+        </label>
+        <!-- Aggiungi (change)="onFileSelected($event)" per gestire il file selezionato nel component -->
+        <input
+          id="document-upload"
+          type="file"
+          accept=".pdf,image/*"
+          class="d-none"
+          (change)="onFileSelected($event)"
+        >
+      </div>
+      }
+    }
+  </div>
+</div>
   </div>
 } @else {
   <div class="container-fluid">

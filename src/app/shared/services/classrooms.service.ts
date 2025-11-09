@@ -1,14 +1,19 @@
-import { Injectable } from '@angular/core';
+import { computed, inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { Aula, ClassroomRegistration, DocumentItem, Registration, Utente } from '../models/shared.models';
 import { HttpService } from './http.service';
 import { HttpParams } from '@angular/common/http';
+import { UserStateService } from '../../auth/services/user-state.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClassroomsService {
+  
+  private userState = inject(UserStateService);
+  currentUser = this.userState.profile;
+  currentUserId = computed(() => this.currentUser()?.id!);
 
   constructor(private httpService: HttpService) { }
 
@@ -21,7 +26,7 @@ export class ClassroomsService {
     return this.httpService.get<Aula>(`/classrooms/${id}`);
   }
 
- getAllCompletedClassroom(userId: number): Observable<Aula[]> {
+  getAllCompletedClassroom(userId: number): Observable<Aula[]> {
     const params = new HttpParams().set('userId', userId.toString());
     return this.httpService.get<Aula[]>('/classrooms/completed', params);
   } 
@@ -42,6 +47,18 @@ export class ClassroomsService {
   getClassroomDocument(classroomId: number): Observable<DocumentItem[]>{
     return this.httpService.get<DocumentItem[]>(`/classrooms/${classroomId}/docs`);
   }
+
+  downloadClassroomDocument(documentId: number): Observable<Blob> {
+    return this.httpService.getBlob(`/classrooms/document/download/${documentId}`);
+  }
+  uploadDocument(aulaId: number, file: File): Observable<void> {
+  const formData = new FormData();
+  formData.append('id', aulaId.toString());
+  formData.append('file', file);
+  console.log(formData);
+
+  return this.httpService.post<void>(`/classrooms/${aulaId}/doc`, formData);
+}
 
 
 
