@@ -7,6 +7,7 @@ import { AuleComponent } from './components/aule/aule.component';
 import { UserComponent } from './components/user/user.component';
 import { IMieiCorsiComponent } from './components/i-miei-corsi/i-miei-corsi.component';
 import { ProfiloComponent } from './components/profilo/profilo.component';
+import { SitiComponent } from './components/siti/siti-component';
 
 export const WORKSPACE_ROUTES: Routes = [
   {
@@ -41,7 +42,12 @@ export const WORKSPACE_ROUTES: Routes = [
       {
         path: 'profilo',
         component: ProfiloComponent
+      },
+
+      { path: 'affiliazioni', 
+        component: SitiComponent
       }
+
     ]
   }
 ];

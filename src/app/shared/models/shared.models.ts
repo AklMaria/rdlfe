@@ -54,3 +54,10 @@ export interface Registration {
   userId: number;
   classroomId : number;
 }
+
+
+export interface Sito {
+  id: number;
+  name: string;
+  link: string;
+}

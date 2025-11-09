@@ -1,0 +1,58 @@
+<div class="container d-flex flex-column justify-content-center">
+  @if (userRole() === 'ADMIN') {
+    <div class="d-flex justify-content-end pb-4">
+      <button class="btn btn-primary" (click)="addLink()">Aggiungi</button>
+    </div>
+  }
+
+  <table class="table w-100 table-striped table-bordered">
+    <thead>
+      <tr>
+        <th>Sito web</th>
+        <th>Link</th>
+        @if (userRole() === 'ADMIN') {
+          <th>Azioni</th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let sito of siti">
+        <td>{{ sito.name }}</td>
+        <td><a [href]="sito.link" target="_blank">{{ sito.link }}</a></td>
+        @if (userRole() === 'ADMIN') {
+          <td class="d-flex gap-2">
+            <!-- <button type="button" class="btn btn-primary" (click)="updateLink(sito)">Modifica</button> -->
+            <button type="button" class="btn btn-danger" (click)="deleteLink(sito)">Elimina</button>
+          </td>
+        }
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="newWebsiteLink" aria-labelledby="offcanvasLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasLabel">
+      {{ editMode ? 'Modifica sito affiliato' : 'Aggiungi nuovo sito' }}
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" (click)="closeSidebar()"></button>
+  </div>
+
+  <div class="offcanvas-body">
+    <form [formGroup]="newLink" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="name" class="form-label">Sito web</label>
+        <input type="text" class="form-control" id="name" formControlName="name" required>
+      </div>
+      <div class="mb-3">
+        <label for="link" class="form-label">Link</label>
+        <input type="text" class="form-control" id="link" formControlName="link" required>
+      </div>
+
+      <button type="submit" class="btn btn-success w-100" [disabled]="newLink.invalid">
+        {{ editMode ? 'Salva modifiche' : 'Aggiungi' }}
+      </button>
+    </form>
+  </div>
+</div>

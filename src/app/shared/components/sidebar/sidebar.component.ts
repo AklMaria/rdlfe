@@ -17,7 +17,7 @@ export class SidebarComponent implements OnInit{
 
   private userState = inject(UserStateService);
   private profile = this.userState.profile;
-  userRole = computed(() => this.profile()?.role!) // Simula il ruolo dell'utente
+  userRole = computed(() => this.profile()?.role!) 
   menuItems: {icon:string; label: string; route: string }[] = [];
 
   constructor() {}
@@ -27,14 +27,13 @@ export class SidebarComponent implements OnInit{
   }
 
   loadMenuItems() {
-    console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", this.userRole());
-    // this.userRole = this.authService.getUserRole(); // Rimosso il servizio auth
+   
     if (this.userRole() === 'ADMIN') {
-      this.menuItems = [{icon:'bi bi-house', label: 'Amministrazione', route: 'admin'}, {icon:'bi bi-book', label: 'Corsi', route: 'corsi'},{icon:'bi bi-people', label: 'Utenti', route: 'utenti'}];
+      this.menuItems = [{icon:'bi bi-house', label: 'Amministrazione', route: 'admin'}, {icon:'bi bi-book', label: 'Corsi', route: 'corsi'},{icon:'bi bi-people', label: 'Utenti', route: 'utenti'},{icon:'bi bi-share', label: 'Iscriviti', route: 'affiliazioni'}];
     } else if (this.userRole() === 'USER') {
-      this.menuItems = [{icon:'bi bi-house', label: 'Dashboard', route: 'dashboard'},{icon:'bi bi-book', label: 'Corsi', route: 'corsi'},{icon:'bi bi-book-half', label: 'I miei corsi', route: 'i-miei-corsi'}];
+      this.menuItems = [{icon:'bi bi-house', label: 'Dashboard', route: 'dashboard'},{icon:'bi bi-book', label: 'Corsi', route: 'corsi'},{icon:'bi bi-book-half', label: 'I miei corsi', route: 'i-miei-corsi'},{icon:'bi bi-share', label: 'Iscriviti', route: 'affiliazioni'}];
     } else {
-      this.menuItems = []; // Nessuna voce di menu per utenti non autenticati/con ruoli sconosciuti
+      this.menuItems = []; 
     }
   }
 }
