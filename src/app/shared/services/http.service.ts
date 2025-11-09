@@ -77,6 +77,7 @@ delete<T>(endpoint: string, options?: {
 }
 
 
+
   // Metodo PATCH generico
   patch<T>(endpoint: string, data: any): Observable<T> {
     return this.http.patch<T>(`${this.baseUrl}${endpoint}`, data, {
@@ -108,6 +109,18 @@ delete<T>(endpoint: string, options?: {
       catchError(this.handleError)
     );
   }
+
+  // ✅ Metodo dedicato per scaricare file binari (Blob)
+  getBlob(endpoint: string): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}${endpoint}`, {
+      headers: this.defaultHeaders,
+      responseType: 'blob'
+    }).pipe(
+      retry(1),
+      catchError(this.handleError)
+    );
+  }
+
 
   // Metodo per impostare token di autenticazione
   setAuthToken(token: string): void {

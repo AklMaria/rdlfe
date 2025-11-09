@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { Aula, DocumentItem, Utente } from '../models/shared.models';
 import { HttpService } from './http.service';
-import {HttpParams} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
@@ -51,11 +51,16 @@ export class UserService {
   return this.httpService.post<void>('/docs', formData);
 }
 
-  getDocumentsByUserId(userId: number): Observable<DocumentItem[]> {
+getDocumentsByUserId(userId: number): Observable<DocumentItem[]> {
   return this.httpService.get<DocumentItem[]>(`/docs/${userId}`);
 }
 deleteDocument(documentId: number): Observable<void> {
   return this.httpService.delete<void>(`/docs/${documentId}`);
 }
+
+downloadDocument(documentId: number): Observable<Blob> {
+  return this.httpService.getBlob(`/docs/download/${documentId}`);
+}
+
   
 }

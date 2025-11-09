@@ -65,6 +65,9 @@
                             <button class="btn" (click)="deleteUser(utente.id!)">
                               <i class="bi bi-x-lg"></i>
                             </button>
+                            <button class="btn" (click)="openUserDocuments(utente)">
+                              <i class="bi bi-file-earmark-text"></i>
+                            </button>
                           </td>
                         </tr>
                       }
@@ -171,4 +174,49 @@
       </form>
     </div>
   </div>
+
+  <!-- Offcanvas Documenti Utente -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="userDocumentsOffcanvas" #userDocumentsOffcanvas>
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Documenti di {{ selectedUser?.firstName }} {{ selectedUser?.lastName }}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Chiudi"></button>
+  </div>
+  <div class="offcanvas-body">
+    @if (isDocsLoading) {
+      <div class="text-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Caricamento...</span>
+        </div>
+        <p class="mt-2">Caricamento documenti...</p>
+      </div>
+    } @else {
+      @if (userDocuments.length > 0) {
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Nome Documento</th>
+                <th>Scarica</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (doc of userDocuments; track doc) {
+                <tr>
+                  <td>{{ doc.fileName }}</td>  
+                  <td>
+                    <button class="btn btn-sm btn-outline-primary" (click)="downloadDocument(doc)">
+                      <i class="bi bi-download me-1"></i>Scarica
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <div class="alert alert-info">Nessun documento trovato per questo utente.</div>
+      }
+    }
+  </div>
+</div>
 </div>

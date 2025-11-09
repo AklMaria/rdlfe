@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { UserService } from '../../../shared/services/user.service';
-import { Utente } from '../../../shared/models/shared.models';
+import { DocumentItem, Utente } from '../../../shared/models/shared.models';
 import {CommonModule, DatePipe, NgClass} from "@angular/common";
 
 @Component({
@@ -18,9 +18,15 @@ import {CommonModule, DatePipe, NgClass} from "@angular/common";
 })
 export class UserComponent implements OnInit, AfterViewInit {
   @ViewChild('createUserOffcanvas') createUserOffcanvasElement!: ElementRef;
+  @ViewChild('userDocumentsOffcanvas') userDocumentsOffcanvasElement!: ElementRef;
 
   allUsers: Utente[] = [];
   paginatedUsers: Utente[] = [];
+  userDocuments: DocumentItem[] = [];
+
+  isDocsLoading = false;
+
+  private userDocumentsOffcanvas: any;
   isLoading = true;
 
   // Paginazione
@@ -32,6 +38,7 @@ export class UserComponent implements OnInit, AfterViewInit {
   newUserForm!: FormGroup;
   private createUserOffcanvas: any;
   editingUser: Utente | null = null;
+  selectedUser: Utente | null = null;
 
   constructor(
     private userService: UserService,
@@ -47,6 +54,9 @@ export class UserComponent implements OnInit, AfterViewInit {
     if (this.createUserOffcanvasElement) {
       this.createUserOffcanvas = new (window as any).bootstrap.Offcanvas(this.createUserOffcanvasElement.nativeElement);
     }
+    if (this.userDocumentsOffcanvasElement) {
+    this.userDocumentsOffcanvas = new (window as any).bootstrap.Offcanvas(this.userDocumentsOffcanvasElement.nativeElement);
+}
   }
 
   initForm(): void {
@@ -156,15 +166,48 @@ export class UserComponent implements OnInit, AfterViewInit {
   }
 
   deleteUser(id: number): void {
-  this.userService.deleteUser(id).subscribe({
-    next: () => {
-      console.log('Utente eliminato');
-      // ad esempio aggiorni la lista utenti
-      this.loadUsers();
+    this.userService.deleteUser(id).subscribe({
+      next: () => {
+        console.log('Utente eliminato');
+        // ad esempio aggiorni la lista utenti
+        this.loadUsers();
+      },
+      error: (err) => {
+        console.error('Errore eliminazione:', err);
+      }
+    });
+  }
+
+  openUserDocuments(user: Utente): void {
+  this.selectedUser = user;
+  this.isDocsLoading = true;
+  this.userDocuments = [];
+
+  this.userService.getDocumentsByUserId(user.id!).subscribe({
+    next: (docs) => {
+      this.userDocuments = docs;
+      this.isDocsLoading = false;
+      this.userDocumentsOffcanvas.show();
     },
     error: (err) => {
-      console.error('Errore eliminazione:', err);
+      console.error('Errore nel caricamento documenti:', err);
+      this.isDocsLoading = false;
     }
   });
 }
+
+downloadDocument(doc: DocumentItem): void {
+    this.userService.downloadDocument(doc.id).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = doc.fileName;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => console.error('Errore durante il download del documento', err)
+    });
+  }
+
 }

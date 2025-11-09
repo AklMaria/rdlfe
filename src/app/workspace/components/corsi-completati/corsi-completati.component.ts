@@ -1,5 +1,5 @@
 import { Component, computed, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
-import { Aula, ClassroomRegistration } from '../../../shared/models/shared.models';
+import { Aula, ClassroomRegistration, DocumentItem } from '../../../shared/models/shared.models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserStateService } from '../../../auth/services/user-state.service';
 import { ClassroomsService } from '../../../shared/services/classrooms.service';
@@ -105,8 +105,18 @@ export class CorsiCompletatiComponent implements OnInit{
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
-  downloadDocument(){
-   console.log('metodo richiamato') 
-  }
+ downloadDocument(doc: any): void {
+  this.userService.downloadDocument(doc.id).subscribe({
+    next: (blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = doc.fileName;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    },
+    error: (err) => console.error('Errore durante il download:', err)
+  });
+}
 
 }
