@@ -22,7 +22,6 @@ import {NavbarComponent} from "../../../shared/components/navbar/navbar.componen
 export class WorkspaceComponent implements OnInit{
 
   isSidebarCollapsed: boolean = false;
-  currentRole='user';
 
   toggleSidebar(): void {
     this.isSidebarCollapsed = !this.isSidebarCollapsed;

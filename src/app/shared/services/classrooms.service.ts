@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { Aula, ClassroomRegistration, Registration, Utente } from '../models/shared.models';
+import { Aula, ClassroomRegistration, DocumentItem, Registration, Utente } from '../models/shared.models';
 import { HttpService } from './http.service';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,12 @@ export class ClassroomsService {
     return this.httpService.get<Aula>(`/classrooms/${id}`);
   }
 
+ getAllCompletedClassroom(userId: number): Observable<Aula[]> {
+    const params = new HttpParams().set('userId', userId.toString());
+    return this.httpService.get<Aula[]>('/classrooms/completed', params);
+  } 
+
+
   createClassroom(aula: Aula): Observable<Aula> {
     return this.httpService.post<Aula>('/classrooms', aula);
   }
@@ -30,6 +37,10 @@ export class ClassroomsService {
 
   deleteClassroom(id: number): Observable<void> {
     return this.httpService.delete<void>(`/classrooms/${id}`);
+  }
+
+  getClassroomDocument(classroomId: number): Observable<DocumentItem[]>{
+    return this.httpService.get<DocumentItem[]>(`/classrooms/${classroomId}/docs`);
   }
 
 

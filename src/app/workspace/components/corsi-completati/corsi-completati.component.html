@@ -1,0 +1,87 @@
+<div class="container-fluid">
+    <div class="row pt-4">
+      <div class="col col-12">
+        <div style="min-height: 50vh;" class="glass-card p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3>Corsi Conclusi</h3>
+          </div>
+          <!-- Stato di Caricamento -->
+          @if (isLoading) {
+            <div class="text-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <p class="mt-2">Caricamento corsi...</p>
+            </div>
+          }
+          <!-- Contenuto (se non in caricamento) -->
+          @if (!isLoading) {
+            <div>
+              <!-- Se ci sono aule -->
+              @if (allClassroomsCompleted.length > 0) {
+                <div>
+                  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    @for (aula of allClassroomsCompleted; track aula) {
+                      <div class="col">
+                        <div class="card h-100 shadow-sm">
+                          <div class="card-header border-0 bg-white text-black">
+                            <h6 class="card-title mb-0">{{ aula.name }}</h6>
+                          </div>
+                          <div class="card-body d-flex flex-column">
+                            <div class="d-flex align-content-center">
+                              <div
+                                class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center flex-column mb-3 me-3"
+                                style="width:65px; height: 65px;">
+                                <h5 class="mb-0 fw-bold">{{ aula.date | date:'d':'':'it' }}</h5>
+                                <h5
+                                  class="text-uppercase fw-light">{{ aula.date | date:'MMMM':'':'it'| slice:0:3 }}</h5>
+                              </div>
+                              <div class="d-flex flex-column justify-content-center align-item-center me-3">
+                                <h6 class="mb-0">Orario </h6>
+                                <div>
+                                  {{ aula.time.split(':')[0] }}:{{ aula.time.split(':')[1] }}
+                                </div>
+                              </div>
+                            </div>
+                            <div class=""><p class="card-text">{{ aula.description }}</p></div>
+                            
+                          </div>
+                          <div class="card-footer d-flex justify-content-end bg-white border-0 text-center">
+                            <button class="btn btn-primary btn-sm w-50" (click)="downloadDocument()">Scarica documenti</button>
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                  <!-- Paginazione Bootstrap -->
+                  @if (totalPages > 1) {
+                    <nav aria-label="Classroom pagination" class="mt-4">
+                      <ul class="pagination justify-content-start">
+                        <li class="page-item" [class.disabled]="currentPage === 1"><a class="page-link" href="#"
+                                                                                      (click)="goToPage(currentPage - 1); $event.preventDefault()">Prec.</a>
+                        </li>
+                        @for (page of pages; track page) {
+                          <li class="page-item" [class.active]="currentPage === page"><a class="page-link" href="#"
+                                                                                         (click)="goToPage(page); $event.preventDefault()">{{ page }}</a>
+                          </li>
+                        }
+                        <li class="page-item" [class.disabled]="currentPage === totalPages"><a class="page-link"
+                                                                                               href="#"
+                                                                                               (click)="goToPage(currentPage + 1); $event.preventDefault()">Succ.</a>
+                        </li>
+                      </ul>
+                    </nav>
+                  }
+                </div>
+              } @else {
+                <div class="alert alert-info" role="alert">
+                  Al momento non ci sono lezioni disponibili a cui puoi iscriverti.
+                </div>
+              }
+              <!-- Template se non ci sono aule -->
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>

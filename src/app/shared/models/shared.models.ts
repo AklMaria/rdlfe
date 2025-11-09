@@ -8,8 +8,10 @@ export interface Aula{
     time : string;
     duration : number;
     isActive: boolean;
+    completed: boolean;
     link: string;
 }
+
 export interface Utente{
     firstName?: string;
     lastName?: string;
@@ -29,7 +31,7 @@ export interface DocumentRequest {
   userId: number;
   content: string;
 }
-export interface DocumentItem {
+export interface DocumentItem{
   id: number;
   fileName: string;
   contentType?: string;
@@ -54,7 +56,6 @@ export interface Registration {
   userId: number;
   classroomId : number;
 }
-
 
 export interface Sito {
   id: number;

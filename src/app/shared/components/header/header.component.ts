@@ -5,7 +5,9 @@ import {CommonModule} from "@angular/common";
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-header', standalone: true, templateUrl: './header.component.html',
+  selector: 'app-header',
+  standalone: true,
+  templateUrl: './header.component.html',
   imports: [
     CommonModule,RouterLink
   ],

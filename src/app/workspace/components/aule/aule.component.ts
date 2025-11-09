@@ -83,7 +83,8 @@ export class AuleComponent implements OnInit, AfterViewInit {
       date: ['', Validators.required],
       time: ['', Validators.required],
       duration: ['', Validators.required],
-      isActive: [true, Validators.required]
+      isActive: [true, Validators.required],
+      completed: [false, Validators.required]
     });
   }
 
@@ -148,7 +149,8 @@ export class AuleComponent implements OnInit, AfterViewInit {
       date: aula.date,
       time: aula.time,
       duration: aula.duration,
-      isActive: aula.isActive
+      isActive: aula.isActive,
+      completed: aula.completed
     });
     this.createClassroomOffcanvas.show();
   }

@@ -3,7 +3,7 @@
 
 
   <!-- Solo user -->
-  @if (currentRole === 'USER') {
+  @if (userRole() === 'USER') {
     <ng-container>
       <a class="w-100 px-4 text-center py-2 text-decoration-none fs-6"
          routerLink="dashboard">
@@ -17,13 +17,18 @@
          routerLink="i-miei-corsi">
         <i class="text-white fs-3 bi bi-book-half"></i>
       </a>
-      <!-- ✅ NUOVA VOCE DI MENU -->
+      <!-- ✅ NUOVE VOCI DI MENU -->
       <a class="w-100 px-4 text-center py-2 text-decoration-none fs-6"
         routerLink="sites">
         <i class="text-white fs-3 bi bi-link-45deg"></i>
       </a>
+       
+      <a class="w-100 px-4 text-center py-2 text-decoration-none fs-6"
+        routerLink="corsi-completati">
+        <i class="text-white fs-3 bi bi-link-45deg"></i>
+      </a>
     </ng-container>
-  } @else if (currentRole === 'ADMIN') {
+  } @else if (userRole() === 'ADMIN') {
 
     <!-- Solo admin -->
     <ng-container>

@@ -1,6 +1,6 @@
 <ng-container>
   <div class="row gx-0 w-100 z-1 position-fixed">
-    <app-header></app-header>
+    <app-header class="d-flex justify-content-end"></app-header>
   </div>
   <div class="d-flex py-5 row gx-0" [ngClass]="{'sidebar-collapsed': isSidebarCollapsed}">
     <div class="position-fixed top-0 col" [class.col-md-2]="!isSidebarCollapsed" [class.col-md-0]="isSidebarCollapsed">
