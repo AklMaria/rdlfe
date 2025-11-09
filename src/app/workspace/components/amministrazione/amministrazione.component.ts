@@ -24,7 +24,7 @@ export class AmministrazioneComponent implements OnInit{
   // Proprietà per la paginazione
   currentPage = 1;
   // Come richiesto, 20 righe. L'ho impostato a 2 per vederlo funzionare con i tuoi dati di esempio.
-  itemsPerPage = 2;
+  itemsPerPage = 20;
   totalPages = 0;
 
   constructor(private userService: UserService, private classroomService: ClassroomsService){

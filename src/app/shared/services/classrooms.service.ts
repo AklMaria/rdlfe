@@ -58,6 +58,9 @@ export class ClassroomsService {
   console.log(formData);
 
   return this.httpService.post<void>(`/classrooms/${aulaId}/doc`, formData);
+  }
+  deleteDoc(classroomId: number, docId: number): Observable<void> {
+  return this.httpService.delete<void>(`/classrooms/${classroomId}/docs/${docId}`);
 }
 
 

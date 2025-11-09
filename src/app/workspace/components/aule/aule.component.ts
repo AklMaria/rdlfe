@@ -6,7 +6,7 @@ import { UserService } from '../../../shared/services/user.service';
 import { InscriptionsService } from '../../../shared/services/inscriptions.service';
 import { CommonModule, DatePipe, NgClass, SlicePipe } from "@angular/common";
 import { UserStateService } from "../../../auth/services/user-state.service";
-import { timestamp } from 'rxjs';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-aule',
@@ -97,34 +97,53 @@ export class AuleComponent implements OnInit, AfterViewInit {
       time: ['', Validators.required],
       duration: ['', Validators.required],
       isActive: [true, Validators.required],
-      completed: [false, Validators.required]
+      completed: [false]
     });
   }
 
   loadClassrooms(): void {
-    this.classroomsService.getAllClassrooms().subscribe({
-      next: (aule) => {
-        if (this.userRole() === 'ADMIN') {
-          // L'admin vede tutte le aule, ordinate per data
-          this.allClassrooms = aule.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-        } else {
-          // L'utente vede solo le aule future, attive, con posti liberi e a cui non è già iscritto
-          const now = new Date();
-          now.setHours(0, 0, 0, 0);
-          this.allClassrooms = aule.filter(aula =>
-            aula.isActive && new Date(aula.date) >= now
-          ).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-        }
-        this.totalPages = Math.ceil(this.allClassrooms.length / this.itemsPerPage);
-        this.updatePaginatedClassrooms();
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Errore nel caricamento delle aule', err);
-        this.isLoading = false;
+  this.isLoading = true;
+  const userId = this.currentUserId();
+
+  // Facciamo due chiamate: tutte le aule + aule dell'utente
+  forkJoin({
+    all: this.classroomsService.getAllClassrooms(),
+    userClasses: this.userService.getClassroomsByUserId(userId)
+  }).subscribe({
+    next: ({ all, userClasses }) => {
+      if (this.userRole() === 'ADMIN') {
+        // L'admin vede tutte le aule
+        this.allClassrooms = all.sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
+      } else {
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);
+
+        // Otteniamo gli ID delle aule dove l'utente è già iscritto
+        const userClassIds = new Set(userClasses.map(c => c.id));
+
+        // Filtriamo solo quelle attive, future, con posti liberi, e non già iscritte
+        this.allClassrooms = all
+          .filter(aula =>
+            aula.isActive &&
+            new Date(aula.date) >= now &&
+            !userClassIds.has(aula.id)
+          )
+          .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
       }
-    });
-  }
+
+      this.totalPages = Math.ceil(this.allClassrooms.length / this.itemsPerPage);
+      this.updatePaginatedClassrooms();
+      this.isLoading = false;
+    },
+    error: (err) => {
+      console.error('Errore nel caricamento delle aule', err);
+      this.isLoading = false;
+    }
+  });
+}
+
 
   updatePaginatedClassrooms(): void {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
@@ -214,7 +233,6 @@ export class AuleComponent implements OnInit, AfterViewInit {
     };
     this.inscriptionsService.registerUserToClassroom(registrationRequest).subscribe({
       next: () => {
-        this.allClassrooms = this.allClassrooms.filter(a => a.id !== aula.id);
         this.loadClassrooms();
       },
       error: (err) => {
@@ -319,4 +337,17 @@ export class AuleComponent implements OnInit, AfterViewInit {
       }
     });
   }
+  deleteDoc(aulaId: number, docId: number): void {
+  if (confirm('Sei sicuro di voler eliminare questo documento?')) {
+    this.classroomsService.deleteDoc(aulaId, docId).subscribe({
+      next: () => {
+        // Rimuovi il documento localmente dall’elenco
+        this.courseDocuments = this.courseDocuments.filter(doc => doc.id !== docId);
+      },
+      error: (err) => {
+        console.error('Errore durante l\'eliminazione del documento:', err);
+      }
+    });
+  }
+}
 }
