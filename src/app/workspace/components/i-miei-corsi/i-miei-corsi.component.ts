@@ -61,4 +61,18 @@ export class IMieiCorsiComponent implements OnInit{
         }
       })
     }
+
+    canActivateAula(aula: Aula): boolean {
+    // Combina la data e l'ora in un unico oggetto Date
+    const [hours, minutes] = aula.time.split(':').map(Number);
+    const lessonStart = new Date(aula.date);
+    lessonStart.setHours(hours, minutes, 0, 0);
+
+    // Calcola il tempo attuale + 10 minuti
+    const now = new Date();
+    const tenMinutesBefore = new Date(lessonStart.getTime() - 10 * 60 * 1000);
+
+    // Ritorna true se siamo a meno di 10 minuti dall'inizio o oltre
+    return now >= tenMinutesBefore;
+  }
 }

@@ -95,6 +95,7 @@ export class AuleComponent implements OnInit, AfterViewInit {
       maxSeats: [20, [Validators.required, Validators.min(1)]],
       date: ['', Validators.required],
       time: ['', Validators.required],
+      link: [''],
       duration: ['', Validators.required],
       isActive: [true, Validators.required],
       completed: [false]
@@ -180,6 +181,7 @@ export class AuleComponent implements OnInit, AfterViewInit {
       maxSeats: aula.maxSeats,
       date: aula.date,
       time: aula.time,
+      link: aula.link,
       duration: aula.duration,
       isActive: aula.isActive,
       completed: aula.completed

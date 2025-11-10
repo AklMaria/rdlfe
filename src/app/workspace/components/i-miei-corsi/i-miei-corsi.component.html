@@ -30,7 +30,8 @@
             </li>
           </ul>
         </div>
-        <div class="card-footer d-flex justify-content-end bg-white border-0 text-center" >
+        <div class="card-footer d-flex justify-content-between bg-white border-0 text-center" >
+          <button class="btn btn-primary btn-sm w-auto" [disabled]="!canActivateAula(aula)">Vai al corso</button>
           <button class="btn btn-danger btn-sm w-auto" (click)="unsubscribe(aula)">cancella iscrizione</button>
         </div>
       </div>
