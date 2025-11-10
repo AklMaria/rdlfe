@@ -32,21 +32,25 @@ export class LoginService {
   readonly authState$: Observable<User | null> = authState(this.auth);
 
   constructor() {
-    this.authState$.subscribe(firebaseUser => {
-      if (firebaseUser) {
-        const basicProfile: Utente = {
-          username: firebaseUser.displayName!,
-          image: firebaseUser.photoURL!,
-          email: firebaseUser.email!,
-        };
-
-        this.utente.setUtente(basicProfile);
-
-      } else {
+  this.authState$.subscribe(firebaseUser => {
+    if (firebaseUser) {
+      const basicProfile: Utente = {
+        username: firebaseUser.displayName ?? '',
+        image: firebaseUser.photoURL ?? '',
+        email: firebaseUser.email ?? '',
+      };
+      this.utente.setUtente(basicProfile);
+    } else {
+      // Non azzerare lo stato se abbiamo già una sessione backend
+      const existing = sessionStorage.getItem('user');
+      if (!existing) {
+        // solo se non c'è alcuna sessione salvata, allora svuota
         this.utente.setUtente(null);
       }
-    });
-  }
+      // altrimenti: NO-OP, lasciamo valido lo stato da sessionStorage
+    }
+  });
+}
 
   async signInWithFacebook() {
     const provider = new FacebookAuthProvider();

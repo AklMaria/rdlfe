@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {CommonModule, NgClass} from "@angular/common";
 import {HeaderComponent} from "../../../shared/components/header/header.component";
 import {SidebarComponent} from "../../../shared/components/sidebar/sidebar.component";
 import {RouterOutlet} from "@angular/router";
 import {NavbarComponent} from "../../../shared/components/navbar/navbar.component";
+import { UserStateService } from '../../../auth/services/user-state.service';
 
 @Component({
   selector: 'app-workspace',
