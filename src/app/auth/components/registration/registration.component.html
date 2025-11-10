@@ -4,10 +4,10 @@
       @if (partialProfile(); as user) {
         <div class="card">
           <div class="card-header">
-            <h4>Complete Your Registration</h4>
+            <h4>Completa la tua registrazione</h4>
           </div>
           <div class="card-body">
-            <p>Welcome, <strong>{{ user.firstName }} {{ user.lastName }}</strong>! Please complete your profile to continue.</p>
+            <p>Welcome, <strong>{{ partialProfile()?.firstName }} {{ partialProfile()?.lastName }}</strong>! Per favore completa il tuo profilo per continuare.</p>
 
             <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
               <div class="mb-3">
@@ -16,7 +16,7 @@
               </div>
               <div class="mb-3">
                 <label for="birthDate" class="form-label">Birth Date</label>
-                <input type="date" id="birthDate" class="form-control" formControlName="birthDate">
+                <input type="date" id="birthDate" class="form-control" formControlName="birth_date">
               </div>
 
               <div class="mb-3">
@@ -35,7 +35,7 @@
                 }
               </div>
               <button type="submit" class="btn btn-primary w-100" [disabled]="registrationForm.invalid">
-                Complete Registration
+                Completa registrazione
               </button>
             </form>
           </div>

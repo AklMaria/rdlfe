@@ -22,6 +22,8 @@ export class RegistrationComponent implements OnInit {
   // Get the partial profile from the state
   partialProfile = this.userState.profile;
   registrationForm!: FormGroup;
+  user!: Utente;
+
 
   ngOnInit(): void {
     if (!this.partialProfile()) {
@@ -32,7 +34,8 @@ export class RegistrationComponent implements OnInit {
 
     this.registrationForm = this.fb.group({
       username: ['', Validators.required],
-      birthDate: ['', Validators.required]
+      birth_date: ['', Validators.required],
+      password: ['', Validators.required]
     });
   }
 
