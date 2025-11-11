@@ -78,11 +78,7 @@
                   [class.bg-danger]="!aula.isActive">
                   {{ aula.isActive ? 'Attivo' : 'Non attivo' }}
                 </span>
-                <button class="btn btn-primary btn-sm"
-                  [disabled]="(now$ | async)! < getUnlockAtMs(aula.time, aula.date)"
-                  (click)="joinClass(aula)">
-                  Partecipa
-                </button>
+               <a [href]="aula.link" target="_blank" class="btn btn-primary btn-sm w-auto" [class.disabled]="!canActivateAula(aula)" role="button">Vai al corso</a>
               </div>
             </div>
           </div>
