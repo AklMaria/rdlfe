@@ -1,13 +1,13 @@
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-md-6">
-      @if (partialProfile(); as user) {
+      @if (partialProfile; as user) {
         <div class="card">
           <div class="card-header">
             <h4>Completa la tua registrazione</h4>
           </div>
           <div class="card-body">
-            <p>Welcome, <strong>{{ partialProfile()?.firstName }} {{ partialProfile()?.lastName }}</strong>! Per favore completa il tuo profilo per continuare.</p>
+            <p>Welcome, <strong>{{ partialProfile.firstName }} {{ partialProfile.lastName }}</strong>! Per favore completa il tuo profilo per continuare.</p>
 
             <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
               <div class="mb-3">
@@ -15,15 +15,15 @@
                 <input type="text" id="username" class="form-control" formControlName="username">
               </div>
               <div class="mb-3">
-                <label for="birthDate" class="form-label">Birth Date</label>
-                <input type="date" id="birthDate" class="form-control" formControlName="birth_date">
+                <label for="birthDate" class="form-label">Data di nascita</label>
+                <input type="date" id="birthDate" class="form-control" formControlName="birthDate">
               </div>
 
               <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
                 <input type="password" id="password" class="form-control" formControlName="password">
                 @if (registrationForm.get('password')?.invalid && registrationForm.get('password')?.touched) {
-                  <div class="text-danger small mt-1">Password is required.</div>
+                  <div class="text-danger small mt-1">la password è obbligatoria.</div>
                 }
               </div>
 
@@ -31,7 +31,7 @@
                 <label for="confirmPassword" class="form-label">Confirm Password</label>
                 <input type="password" id="confirmPassword" class="form-control" formControlName="confirmPassword">
                 @if (registrationForm.errors?.['passwordsMismatch'] && registrationForm.get('confirmPassword')?.touched) {
-                  <div class="text-danger small mt-1">Passwords do not match.</div>
+                  <div class="text-danger small mt-1">Le password non corrispondono.</div>
                 }
               </div>
               <button type="submit" class="btn btn-primary w-100" [disabled]="registrationForm.invalid">

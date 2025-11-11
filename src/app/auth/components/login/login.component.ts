@@ -18,91 +18,98 @@ import {UserService} from "../../../shared/services/user.service";
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
-
   private router = inject(Router);
-  errorMessage = '';
-
-  loginForm!: FormGroup;
   private fb = inject(FormBuilder);
-  private http: HttpClient = inject(HttpClient);
+  private http = inject(HttpClient);
   private loginService = inject(LoginService);
   private userService = inject(UserService);
   private userState = inject(UserStateService);
 
+  errorMessage = '';
+  loginForm!: FormGroup;
+
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required]], password: ['', Validators.required]
+      email: ['', [Validators.required]],
+      password: ['', Validators.required],
     });
   }
 
   onSubmit(): void {
     const email = this.loginForm.get('email')?.value;
     const password = this.loginForm.get('password')?.value;
+
     this.loginService.basicLogin(email, password).subscribe({
       next: (loggedInUser: Utente) => {
-        console.log('login riuscito', loggedInUser);
+        console.log('Login riuscito', loggedInUser);
         this.userState.setUtente(loggedInUser);
         sessionStorage.setItem('user', JSON.stringify(loggedInUser));
         this.errorMessage = '';
         this.router.navigate(['/workspace/dashboard']);
-      }, error: (err) => {
+      },
+      error: (err) => {
         console.error('Errore login tradizionale', err);
         this.errorMessage = 'Credenziali non valide.';
-      }
+      },
     });
   }
-
 
   async loginWithFacebook(): Promise<Utente> {
     const user = await this.loginService.signInWithFacebook();
     return {
-      username: user.user.displayName, email: user.user.email
-    } as Utente
+      username: user.user.displayName,
+      email: user.user.email,
+    } as Utente;
   }
 
   async loginWithGoogle(): Promise<void> {
     const userCredentials = await this.loginService.signInWithGoogle();
-    if (!userCredentials) return; // Login failed or was cancelled
+    if (!userCredentials) return; // login fallita o annullata
 
     const email = userCredentials.user.email;
     if (!email) {
-      this.errorMessage = "Could not retrieve email from Google.";
+      this.errorMessage = 'Impossibile ottenere l’email da Google.';
       return;
     }
 
     try {
       const exists = await firstValueFrom(this.userService.doesUserExist(email));
+
       if (exists != 0) {
-        const credential = GoogleAuthProvider.credentialFromResult(userCredentials)!;
-        const googleProfile = await this.fetchGoogleUserProfile(credential.accessToken!);
-        const nameInfo = googleProfile.names[0];
-        const birthday = googleProfile.birthdays[0].date;
-        this.userState.setUtente({
-          username: nameInfo?.displayName || userCredentials.user.displayName,
-          image: userCredentials.user.photoURL!,
-          firstName: nameInfo?.givenName,
-          id: exists,
-          lastName: nameInfo?.familyName,
-          email: userCredentials.user.email!,
-          birthDate: birthday ? `${birthday.day}/${birthday.month}/${birthday.year}` : undefined
-        });
-        this.router.navigate(['/workspace/dashboard']);
+  // Utente già registrato nel DB: recupera il profilo completo
+        try {
+          const userFromDb = await firstValueFrom(this.userService.getUserById(exists));
+
+          this.userState.setUtente(userFromDb);
+          sessionStorage.setItem('user', JSON.stringify(userFromDb));
+
+          this.router.navigate(['/workspace/dashboard']);
+        } catch (error) {
+          console.error('Errore durante il recupero dell’utente dal DB:', error);
+          this.errorMessage = 'Impossibile completare il login. Riprova più tardi.';
+        }
       } else {
+        // Nuovo utente: crea profilo parziale e vai alla registrazione
+        const firebaseUser = userCredentials.user;
+        const [firstName, ...rest] = (firebaseUser.displayName ?? '').split(' ');
+        const lastName = rest.join(' ');
+
+        const partialProfile: Utente = {
+          firstName,
+          lastName,
+          username: firebaseUser.displayName ?? '',
+          email: firebaseUser.email ?? '',
+          image: firebaseUser.photoURL ?? '',
+        };
+
+        this.userState.setUtente(partialProfile);
+        sessionStorage.setItem('partialProfile', JSON.stringify(partialProfile));
+
         this.router.navigate(['/registration']);
       }
     } catch (err) {
-      console.error("Google Login Flow", err);
+      console.error('Google Login Flow error:', err);
+      this.errorMessage = 'Errore durante l’accesso con Google.';
     }
   }
-
-  private async fetchGoogleUserProfile(accessToken: string): Promise<any> {
-    const url = 'https://people.googleapis.com/v1/people/me?personFields=birthdays,names,emailAddresses';
-
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${accessToken}`
-    });
-
-    return firstValueFrom(this.http.get(url, {headers}));
-  }
-
 }

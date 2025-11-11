@@ -121,13 +121,13 @@
           <div class="col">
             <div class="mb-3">
               <label for="firstname" class="form-label">Nome</label>
-              <input type="text" class="form-control" id="firstname" formControlName="firstname" required>
+              <input type="text" class="form-control" id="firstname" formControlName="firstName" required>
             </div>
           </div>
           <div class="col">
             <div class="mb-3">
               <label for="lastname" class="form-label">Cognome</label>
-              <input type="text" class="form-control" id="lastname" formControlName="lastname" required>
+              <input type="text" class="form-control" id="lastname" formControlName="lastName" required>
             </div>
           </div>
         </div>
@@ -167,7 +167,23 @@
             <option value="ADVANCED">Avanzato</option>
           </select>
         </div>
-
+        <div class="row">
+          <div class="col">
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="text" class="form-control" id="password" formControlName="password" required>
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label">Conferma password</label>
+              <input type="text" class="form-control" id="confirmPassword" formControlName="confirmPassword">
+              @if (newUserForm.errors?.['passwordsMismatch'] && newUserForm.get('confirmPassword')?.touched) {
+                <div class="text-danger small mt-1">Le password non corrispondono.</div>
+              }
+            </div>
+          </div>
+        </div>
         <button type="submit" class="btn btn-success w-100" [disabled]="newUserForm.invalid">
           {{ editingUser ? 'Aggiorna Utente' : 'Salva Utente' }}
         </button>

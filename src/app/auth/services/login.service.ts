@@ -22,8 +22,8 @@ export class LoginService {
   private httpService = inject(HttpService)
 
   basicLogin(email: string, password: string): Observable<Utente> {
-    return this.httpService.post<Utente>(`/users/login`, {mail: email, password});
-  }
+  return this.httpService.post<Utente>(`/users/login`, { email, password });
+}
 
   private auth: Auth = inject(Auth);
   private router = inject(Router);

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { catchError, Observable, of, tap } from 'rxjs';
 import { Aula, DocumentItem, Utente } from '../models/shared.models';
 import { HttpService } from './http.service';
 import {HttpClient, HttpParams} from "@angular/common/http";
@@ -38,8 +38,13 @@ export class UserService {
     }
 
   doesUserExist(email: string): Observable<number> {
-    let params = new HttpParams().set('email', email);
-    return this.httpService.get<number>('/users/exist', params);
+    const params = new HttpParams().set('email', email);
+    return this.httpService.get<number>('/users/exist', params).pipe(
+      catchError((err) => {
+        console.error('Errore controllo esistenza utente:', err);
+        return of(0);
+      })
+    );
   }
 
   uploadDocument(userId: number, file: File): Observable<void> {

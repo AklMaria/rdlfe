@@ -1,8 +1,9 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import { UserService } from '../../../shared/services/user.service';
 import { DocumentItem, Utente } from '../../../shared/models/shared.models';
 import {CommonModule, DatePipe, NgClass} from "@angular/common";
+import { first, last } from 'rxjs';
 
 @Component({
   selector: 'app-user',
@@ -59,13 +60,27 @@ export class UserComponent implements OnInit, AfterViewInit {
     }
   }
 
+  passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const password = control.get('password');
+    const confirmPassword = control.get('confirmPassword');
+
+    // Se i controlli non esistono o non sono stati ancora toccati, non fare nulla
+    if (!password || !confirmPassword || !confirmPassword.dirty) {
+      return null;
+    }
+
+    return password.value === confirmPassword.value ? null : { passwordsMismatch: true };
+  };
+
   initForm(): void {
     this.newUserForm = this.fb.group({
       username: ['', Validators.required],
-      firstname: ['', Validators.required],
-      lastname: ['', Validators.required],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
       birthDate: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email]], // Aggiunto password e confirmPassword
+      password: [''],
+      confirmPassword: [''],
       credits: [0, [Validators.required, Validators.min(0)]],
       state: [true, Validators.required],
       userLevel: ['BEGINNER', Validators.required]
@@ -119,6 +134,8 @@ export class UserComponent implements OnInit, AfterViewInit {
   openEditUserSidebar(user: Utente): void {
     this.editingUser = user;
     this.newUserForm.patchValue({
+      firstName: user.firstName,
+      lastName: user.lastName,
       username: user.username,
       birthDate: user.birthDate,
       email: user.email,
@@ -126,6 +143,13 @@ export class UserComponent implements OnInit, AfterViewInit {
       state: user.state,
       userLevel: user.userLevel || 'BEGINNER'
     });
+    this.newUserForm.get('firstName')?.disable();
+    this.newUserForm.get('lastName')?.disable();
+    this.newUserForm.get('email')?.disable();
+    // Rimuovi il validatore required per le password in modalità modifica
+    this.newUserForm.get('password')?.clearValidators();
+    this.newUserForm.get('confirmPassword')?.clearValidators();
+    this.newUserForm.updateValueAndValidity();
     this.createUserOffcanvas.show();
   }
 
@@ -150,6 +174,8 @@ export class UserComponent implements OnInit, AfterViewInit {
       const formValue = this.newUserForm.value;
       const newUser: Omit<Utente, 'id'> = {
         ...formValue,
+        // Assicurati che la password sia inclusa solo se fornita
+        password: formValue.password || undefined,
         role: 'USER',
        // aule: []     // Nessuna aula all'inizio
       };
